@@ -10,8 +10,8 @@ public:
 	
 	bool operator==(const Coordinate& rCoor);
 	
-	int getX() const;
-	int getY() const;
+	int getX();
+	int getY();
 private:
 	int __x;
 	int __y;
