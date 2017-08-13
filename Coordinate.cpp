@@ -1,5 +1,11 @@
 #include "Coordinate.hpp"
 
+Coordinate::Coordinate()
+{
+	setX(0);
+	setY(0);
+}
+
 Coordinate::Coordinate(int x, int y)
 {
 	setX(x);
@@ -12,12 +18,12 @@ Coordinate::Coordinate(const Coordinate& orig)
 	this->setY(orig.getY());
 }
 
-int Coordinate::getX()
+int Coordinate::getX() const
 {
 	return __x;
 }
 
-int Coordinate::getY()
+int Coordinate::getY() const
 {
 	return __y;
 }

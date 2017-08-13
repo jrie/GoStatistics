@@ -3,12 +3,13 @@
 
 class Coordinate {
 public:
+	Coordinate();
 	Coordinate(int x, int y);
 	Coordinate(const Coordinate& orig);
 	//virtual ~Coordinate();
 	
-	int getX();
-	int getY();
+	int getX() const;
+	int getY() const;
 private:
 	int __x;
 	int __y;
