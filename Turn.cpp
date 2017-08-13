@@ -21,6 +21,7 @@ Turn::Turn(bool color, Coordinate target)
 Turn::Turn(const Turn& orig)
 {
 	this->setColor(orig.getColor());
+	//errorhandling because this functin can throw an exception..
 	this->setTarget(orig.getTarget());
 	this->__id = orig.getId();
 	this->__initialized = orig.isInitialized();
@@ -40,7 +41,7 @@ void Turn::setTarget(Coordinate target)
 	__target = target;
 }
 
-bool Turn::isInitialized()
+bool Turn::isInitialized() const
 {
 	return __initialized;
 }
@@ -54,17 +55,17 @@ bool Turn::isValid()
 	return true;
 }
 
-bool Turn::getColor()
+bool Turn::getColor() const
 {
 	return __color;
 }
 
-int Turn::getId()
+int Turn::getId() const
 {
 	return __id;
 }
 
-Coordinate Turn::getTarget()
+Coordinate Turn::getTarget() const
 {
 	if(!isInitialized())
 	{
