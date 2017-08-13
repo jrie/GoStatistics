@@ -39,7 +39,8 @@ Coordinate::Coordinate(const Coordinate& orig)
  */
 bool Coordinate::operator==(const Coordinate& rCoor)
 {
-	return (getX() == rCoor.getX() && getY() == rCoor.getY());
+	return (__x == rCoor.__x && 
+			__y == rCoor.__y);
 }
 
 /**
