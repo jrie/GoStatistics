@@ -18,6 +18,11 @@ Coordinate::Coordinate(const Coordinate& orig)
 	this->setY(orig.getY());
 }
 
+bool Coordinate::operator==(const Coordinate& rCoor)
+{
+	return (getX() == rCoor.getX() && getY() == rCoor.getY());
+}
+
 int Coordinate::getX() const
 {
 	return __x;

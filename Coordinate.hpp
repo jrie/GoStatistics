@@ -8,6 +8,8 @@ public:
 	Coordinate(const Coordinate& orig);
 	//virtual ~Coordinate();
 	
+	bool operator==(const Coordinate& rCoor);
+	
 	int getX() const;
 	int getY() const;
 private:
