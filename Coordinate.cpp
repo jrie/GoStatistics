@@ -27,8 +27,8 @@ Coordinate::Coordinate(int x, int y)
  */
 Coordinate::Coordinate(const Coordinate& orig)
 {
-	setX(orig.getX());
-	setY(orig.getY());
+	setX(orig.__x);
+	setY(orig.__y);
 }
 
 /**
@@ -47,7 +47,7 @@ bool Coordinate::operator==(const Coordinate& rCoor)
  * @note This function has to be const to be called on a const object
  * @return the x coordinate
  */
-int Coordinate::getX() const
+int Coordinate::getX()
 {
 	return __x;
 }
@@ -57,7 +57,7 @@ int Coordinate::getX() const
  * @note This function has to be const to be called on a const object
  * @return the y coordinate
  */
-int Coordinate::getY() const
+int Coordinate::getY()
 {
 	return __y;
 }

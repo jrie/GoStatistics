@@ -16,7 +16,7 @@ public:
 	
 	bool addMember(Coordinate newMember);
 	
-	vector<Coordinate> getMembers() const;
+	vector<Coordinate> getMembers();
 	vector<Coordinate> getNeighbours();
 	int getNumberOfMembers();
 	

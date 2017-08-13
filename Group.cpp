@@ -31,15 +31,7 @@ Group::Group(Coordinate member)
  */
 Group::Group(const Group& orig)
 {
-	//Temporary save the list of members (Coordinate's)
-	vector<Coordinate> members = orig.getMembers();
-	
-	//Iterate over all elements of the list and add them to this instance
-	for(vector<Coordinate>::iterator it = members.begin(); it != members.end(); ++it)
-	{
-		//We need to dereference the iterator
-		addMember(*it);
-	}
+	__members = orig.__members;
 }
 
 /**
@@ -67,7 +59,7 @@ bool Group::addMember(Coordinate newMember)
  * @brief Returns a vector of all members
  * @return vector<Coordinate> of all members
  */
-vector<Coordinate> Group::getMembers() const
+vector<Coordinate> Group::getMembers()
 {
 	return __members;
 }

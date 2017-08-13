@@ -36,18 +36,18 @@ Turn::Turn(bool color, Coordinate target)
  */
 Turn::Turn(const Turn& orig)
 {
-	this->setColor(orig.getColor());
-	//errorhandling because this functin can throw an exception..
-	this->setTarget(orig.getTarget());
-	this->__id = orig.getId();
-	this->__initialized = orig.isInitialized();
+	setColor(orig.__color);
+	setTarget(orig.__target);
+	__id = orig.__id;
+	__initialized = orig.__initialized;
 }
 
 /**
  * @brief Sets the color. false for black and true for white
  * @param color
  */
-void Turn::setColor(bool color) {
+void Turn::setColor(bool color)
+{
 	__color = color;
 }
 
@@ -72,7 +72,7 @@ void Turn::setTarget(Coordinate target)
  * @brief Returns if the object is fully initialized
  * @return true if the object is initialized
  */
-bool Turn::isInitialized() const
+bool Turn::isInitialized()
 {
 	return __initialized;
 }
@@ -95,7 +95,7 @@ bool Turn::isValid()
  * @brief Returns the color of the Stone which will be played
  * @return The color
  */
-bool Turn::getColor() const
+bool Turn::getColor()
 {
 	return __color;
 }
@@ -104,7 +104,7 @@ bool Turn::getColor() const
  * @brief Returns the id of this turn
  * @return The id of this turn
  */
-int Turn::getId() const
+int Turn::getId()
 {
 	return __id;
 }
@@ -114,7 +114,7 @@ int Turn::getId() const
  * @return The target Coordinate
  * @throws Exception if the object is not fully initialized
  */
-Coordinate Turn::getTarget() const
+Coordinate Turn::getTarget()
 {
 	if(!isInitialized())
 	{
