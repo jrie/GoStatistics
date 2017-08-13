@@ -56,6 +56,15 @@ bool Group::addMember(Coordinate newMember)
 }
 
 /**
+ * @brief Return the color of the group
+ * @return color of the group
+ */
+bool Group::getColor()
+{
+	return __color;
+}
+
+/**
  * @brief Returns a vector of all members
  * @return vector<Coordinate> of all members
  */
@@ -111,4 +120,13 @@ bool Group::hasNeighbour(Coordinate potentialNeigbour)
 	vector<Coordinate> neighbours = getNeighbours();
 	
 	return std::find(neighbours.begin(), neighbours.end(), potentialNeigbour) != neighbours.end();
+}
+
+/**
+ * @brief Sets the color of the group
+ * @param color The color of the group
+ */
+void Group::setColor(bool color)
+{
+	__color = color;
 }

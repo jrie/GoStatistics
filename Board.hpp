@@ -25,6 +25,7 @@ public:
 	
 	bool getColor();
 	vector<Group> getGroups();
+	vector<Group> getGroups(bool color);
 	int getMaxX();
 	int getMaxY();
 	int getMinX();
