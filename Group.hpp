@@ -16,14 +16,18 @@ public:
 	
 	bool addMember(Coordinate newMember);
 	
+	bool getColor();
 	vector<Coordinate> getMembers();
 	vector<Coordinate> getNeighbours();
 	int getNumberOfMembers();
 	
 	bool hasMemberAt(Coordinate coor);
 	bool hasNeighbour(Coordinate potentialNeigbour);
+	
+	void setColor(bool color);
 private:
 	vector<Coordinate> __members;
+	bool __color = false;
 	
 };
 

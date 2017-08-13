@@ -83,6 +83,20 @@ vector<Group> Board::getGroups()
 	return __groups;
 }
 
+vector<Group> Board::getGroups(bool color)
+{
+	vector<Group> retGroups;
+	for(vector<Group>::iterator it = __groups.begin(); it != __groups.end(); ++it)
+	{
+		if(it->getColor() == getColor())
+		{
+			retGroups.push_back(*it);
+		}
+	}
+	
+	return retGroups;
+}
+
 int Board::getMaxX()
 {
 	return __maxX;
