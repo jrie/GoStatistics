@@ -12,7 +12,7 @@ public:
 	Group();
 	Group(Coordinate member);
 	Group(const Group& orig);
-	virtual ~Group();
+	//virtual ~Group();
 	
 	bool addMember(Coordinate newMember);
 	
