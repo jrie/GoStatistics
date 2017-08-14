@@ -44,6 +44,67 @@ bool Coordinate::operator==(const Coordinate& rCoor)
 }
 
 /**
+ * @brief Returns the neighbour at the bottom side of this coordinate
+ * @return Coordinate at the bottom side
+ */
+Coordinate Coordinate::getBottomNeighbour()
+{
+	Coordinate bottomNeighbour(getX(), getY() + 1);
+	
+	return bottomNeighbour;
+}
+
+/**
+ * @brief Returns the neighbour at the left side of the coordinate
+ * @return Coordinate at the left side
+ */
+Coordinate Coordinate::getLeftNeighbour()
+{
+	Coordinate leftNeighbour(getX() - 1, getY());
+	
+	return leftNeighbour;
+}
+
+/**
+ * @brief Returns the four Coordinates which are direct neighbours
+ * @return vector<Coordinate>
+ */
+vector<Coordinate> Coordinate::getNeighbours()
+{
+	vector<Coordinate> neighbours;
+	
+	neighbours.reserve(4); //Preallocate memory to speed up the next 4 lines.
+	neighbours.push_back(getUpperNeighbour());
+	neighbours.push_back(getRightNeighbour());
+	neighbours.push_back(getBottomNeighbour());
+	neighbours.push_back(getLeftNeighbour());
+	
+	return neighbours;
+}
+
+/**
+ * @brief Returns the neighbour at the right side of the coordinate
+ * @return Coordinate at the right side
+ */
+Coordinate Coordinate::getRightNeighbour()
+{
+	Coordinate rightNeighbour(getX() + 1, getY());
+	
+	return rightNeighbour;
+}
+
+/**
+ * @brief Returns the neighbour at the upper side of the coordinate
+ * @return Coordinate at the upper side
+ */
+Coordinate Coordinate::getUpperNeighbour()
+{
+	Coordinate upperNeighbour(getX(), getY() - 1);
+	
+	return upperNeighbour;
+}
+
+/**
  * @brief Returns the X coordinate
  * @note This function has to be const to be called on a const object
  * @return the x coordinate
