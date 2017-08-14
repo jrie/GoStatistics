@@ -68,6 +68,7 @@ Coordinate Coordinate::getLeftNeighbour()
 /**
  * @brief Returns the four Coordinates which are direct neighbours
  * @return vector<Coordinate>
+ * @todo This function should check if all Coordinates are valid on the board.
  */
 vector<Coordinate> Coordinate::getNeighbours()
 {

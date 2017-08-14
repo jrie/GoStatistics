@@ -76,14 +76,34 @@ vector<Coordinate> Group::getMembers()
 /**
  * @brief Returns a vector of all neighbours of the group
  * @return vector<Coordnate> of all neighbours
- * @todo this function is currently not implemented
+ * @todo This function should check if all Coordinates which it gets from its members
+ * are valid on the board.
  */
 vector<Coordinate> Group::getNeighbours()
 {
-	///\todo Implement this function.
 	vector<Coordinate> neighbours;
 	
-	cout << "getNeighbours is currently not implemented" << endl;
+	// Iterate through all members
+	for(vector<Coordinate>::iterator it = __members.begin(); it != __members.end(); ++it)
+	{
+		// Get all potential neighbours of the current member
+		vector<Coordinate> possibleNeighbours = it->getNeighbours();
+		
+		// Check all potential neighbours
+		for(vector<Coordinate>::iterator it = possibleNeighbours.begin(); it != possibleNeighbours.end(); ++it)
+		{
+			// If the potential neighbour is already in the vector it shall not be added
+			if(std::find(neighbours.begin(), neighbours.end(), *it) == neighbours.end())
+			{
+				// Neighbours which are members of the group are no neighbours
+				if(!hasMemberAt(*it))
+				{
+					neighbours.push_back(*it);
+				}
+			}
+		}
+	}
+	
 	return neighbours;
 }
 
