@@ -9,20 +9,18 @@ using std::vector;
 
 class Group {
 public:
-	Group();
+	Group() =default;
 	Group(Coordinate member);
 	Group(const Group& orig);
 	//virtual ~Group();
 	
 	bool addMember(Coordinate newMember);
 	
-	bool getColor();
-	vector<Coordinate> getMembers();
-	vector<Coordinate> getNeighbours();
-	int getNumberOfMembers();
+	bool getColor() const;
+	vector<Coordinate> getMembers() const;
+	int getNumberOfMembers() const;
 	
-	bool hasMemberAt(Coordinate coor);
-	bool hasNeighbour(Coordinate potentialNeigbour);
+	bool hasMemberAt(Coordinate& coor) const;
 	
 	void setColor(bool color);
 private:
