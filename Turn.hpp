@@ -25,10 +25,10 @@ private:
 	void setTarget(Coordinate target);
 	void setInitialized();
 	
-	bool __color = false;
-	int __id = -1;
-	bool __initialized;
-	Coordinate __target;
+	bool m_color = false;
+	int m_id = -1;
+	bool m_initialized;
+	Coordinate m_target;
 };
 
 #endif /* TURN_HPP */

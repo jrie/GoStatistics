@@ -40,21 +40,21 @@ public:
 	void setMinY(int minY);
 	
 private:
-	bool __currentColor;
+	bool m_currentColor;
 	
-	vector<Group> __groups;
+	vector<Group> m_groups;
 	
-	bool __initialized;
+	bool m_initialized;
 	bool isInitialized();
 	
-	int __maxX;
-	int __maxY;
-	int __minX = 1;
-	int __minY = 1;
+	int m_maxX;
+	int m_maxY;
+	int m_minX = 1;
+	int m_minY = 1;
 	
 	void setInitialized();
 	
-	vector<Turn> __turnHistory;
+	vector<Turn> m_turnHistory;
 	
 };
 
