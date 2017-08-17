@@ -3,7 +3,6 @@
 
 #include "Coordinate.hpp"
 
-#include <stdio.h>
 #include <vector>
 
 class Group {

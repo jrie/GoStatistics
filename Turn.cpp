@@ -1,5 +1,4 @@
 #include "Turn.hpp"
-#include "Coordinate.hpp"
 
 /**
  * This variable is static so that every instance can access this value
