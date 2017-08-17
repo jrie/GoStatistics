@@ -17,7 +17,6 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>Board.cpp</itemPath>
-      <itemPath>Coordinate.cpp</itemPath>
       <itemPath>Group.cpp</itemPath>
       <itemPath>Turn.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
@@ -50,8 +49,6 @@
       <item path="Board.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Board.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Coordinate.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Coordinate.hpp" ex="false" tool="3" flavor2="0">
       </item>
@@ -91,8 +88,6 @@
       <item path="Board.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Board.hpp" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="Coordinate.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Coordinate.hpp" ex="false" tool="3" flavor2="0">
       </item>

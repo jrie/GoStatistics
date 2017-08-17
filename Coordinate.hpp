@@ -1,33 +1,36 @@
 #ifndef COORDINATE_HPP
 #define COORDINATE_HPP
 
-#include <stdio.h>
-#include <vector>
-using std::vector;
-
 class Coordinate {
 public:
-	Coordinate();
-	Coordinate(int x, int y);
-	Coordinate(const Coordinate& orig);
-	//virtual ~Coordinate();
-	
-	bool operator==(const Coordinate& rCoor);
-	
-	Coordinate getBottomNeighbour();
-	Coordinate getLeftNeighbour();
-	vector<Coordinate> getNeighbours();
-	Coordinate getRightNeighbour();
-	Coordinate getUpperNeighbour();
-	
-	int getX();
-	int getY();
+	Coordinate() = default;
+
+	Coordinate(int x, int y) : m_x(x), m_y(y) {}
+
+	int x() const
+	{
+		return m_x;
+	}
+
+	int y() const
+	{
+		return m_y;
+	}
+
 private:
-	int __x;
-	int __y;
-	void setX(int x);
-	void setY(int y);
+	int m_x = 0;
+	int m_y = 0;
 };
+
+inline bool operator==(const Coordinate& lhs, const Coordinate& rhs)
+{
+	return lhs.x() == rhs.x() && lhs.y() == rhs.y();
+}
+
+inline bool operator!=(const Coordinate& lhs, const Coordinate& rhs)
+{
+	return not (lhs == rhs);
+}
 
 #endif /* COORDINATE_HPP */
 
