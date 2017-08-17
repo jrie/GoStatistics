@@ -5,7 +5,6 @@
 
 #include <stdio.h>
 #include <vector>
-using std::vector;
 
 class Group {
 public:
@@ -15,14 +14,14 @@ public:
 	bool addMember(Coordinate newMember);
 	
 	bool getColor() const;
-	vector<Coordinate> getMembers() const;
+	std::vector<Coordinate> getMembers() const;
 	int getNumberOfMembers() const;
 	
 	bool hasMemberAt(Coordinate& coor) const;
 	
 	void setColor(bool color);
 private:
-	vector<Coordinate> m_coordinates;
+	std::vector<Coordinate> m_coordinates;
 	bool m_color = false;
 	
 };
