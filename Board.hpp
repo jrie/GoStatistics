@@ -7,14 +7,13 @@
 
 #include <stdio.h>
 #include <vector>
-using std::vector;
 
 class Board {
 public:
 	Board() : m_maxX(19), m_maxY(19) {};
 	Board(int maxX, int maxY) : m_maxX(maxX), m_maxY(maxY) {};
 	
-	bool addTurnHistory(vector<Turn> turnHistory);
+	bool addTurnHistory(std::vector<Turn> turnHistory);
 	
 	bool applyTurn(Turn t);
 	bool applyTurn(bool color, Coordinate target);
@@ -22,14 +21,14 @@ public:
 	void changeColor();
 	
 	bool getColor();
-	vector<Group> getGroups();
-	vector<Group> getGroups(bool color);
+	std::vector<Group> getGroups();
+	std::vector<Group> getGroups(bool color);
 	int getMaxX();
 	int getMaxY();
 	int getMinX();
 	int getMinY();
 	
-	vector<Turn> getTurnHistory();
+	std::vector<Turn> getTurnHistory();
 	
 	void setColor(bool color);
 	void setMaxX(int maxX);
@@ -37,13 +36,13 @@ public:
 	void setMinX(int minX);
 	void setMinY(int minY);
 	
-	vector<Coordinate> getNeighbours(const Coordinate& coor);
-	vector<Coordinate> getNeighbours(const Group& g);
+	std::vector<Coordinate> getNeighbours(const Coordinate& coor);
+	std::vector<Coordinate> getNeighbours(const Group& g);
 	
 private:
 	bool m_currentColor;
 	
-	vector<Group> m_groups;
+	std::vector<Group> m_groups;
 	
 	bool m_initialized;
 	bool isInitialized();
@@ -55,7 +54,7 @@ private:
 	
 	void setInitialized();
 	
-	vector<Turn> m_turnHistory;
+	std::vector<Turn> m_turnHistory;
 	
 };
 
