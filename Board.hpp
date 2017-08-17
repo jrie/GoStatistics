@@ -11,10 +11,8 @@ using std::vector;
 
 class Board {
 public:
-	Board();
-	Board(int maxX, int maxY);
-	Board(const Board& orig);
-	//virtual ~Board();
+	Board() : m_maxX(19), m_maxY(19) {};
+	Board(int maxX, int maxY) : m_maxX(maxX), m_maxY(maxY) {};
 	
 	bool addTurnHistory(vector<Turn> turnHistory);
 	

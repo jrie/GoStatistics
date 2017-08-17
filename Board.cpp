@@ -8,45 +8,6 @@ using namespace std;
 
 #include <algorithm> //find
 
-
-/**
- * @brief Standard Constructor which initialized the board to a normal Go board
- * (19x19)
- */
-Board::Board()
-{
-	setMaxX(19);
-	setMaxY(19);
-}
-
-/**
- * @brief Costum Constructor which initialized the board to a board with given 
- * rows and columns
- */
-Board::Board(int maxX, int maxY)
-{
-	setMaxX(maxX);
-	setMaxY(maxY);
-}
-
-/**
- * @brief Copy Constructor
- * @param orig The instance which will be copied from
- */
-Board::Board(const Board& orig)
-{
-	m_currentColor = orig.m_currentColor;
-	m_groups = orig.m_groups;
-	m_initialized = orig.m_initialized;
-	
-	m_maxX = orig.m_maxX;
-	m_maxY= orig.m_maxY;
-	m_minX = orig.m_minX;
-	m_minY = orig.m_minY;
-	
-	m_turnHistory = orig.m_turnHistory;
-}
-
 /**
  * @brief Adds the given history of Turns to the history of Turns
  * @param turnHistory vector<Turn> which will be added to the history of Turns
@@ -280,6 +241,12 @@ vector<Coordinate> Board::getNeighbours(const Coordinate& coor)
 	return neighbours;
 }
 
+
+/**
+ * @brief Returns a vector of all neighbours of the group
+ * @param g The Group which edges will be checked for neighbours
+ * @return vector<Coordnate> of all neighbours
+ */
 vector<Coordinate> Board::getNeighbours(const Group& g)
 {
 	vector<Coordinate> neighbours;

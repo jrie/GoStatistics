@@ -30,19 +30,6 @@ Turn::Turn(bool color, Coordinate target)
 }
 
 /**
- * @brief Copy Constructor which creates a new Turn object with the values
- * of the given object
- * @param orig The Turn object which will be copied
- */
-Turn::Turn(const Turn& orig)
-{
-	setColor(orig.m_color);
-	setTarget(orig.m_target);
-	m_id = orig.m_id;
-	m_initialized = orig.m_initialized;
-}
-
-/**
  * @brief Sets the color. false for black and true for white
  * @param color
  */
