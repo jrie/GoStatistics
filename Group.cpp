@@ -1,9 +1,5 @@
 #include "Group.hpp"
 
-// with this line we do not have to write std::cout and can write cout instead.
-// same for endl
-using namespace std;
-
 #include <algorithm> //find
 
 /**
@@ -49,7 +45,7 @@ bool Group::getColor() const
  * @brief Returns a vector of all members
  * @return vector<Coordinate> of all members
  */
-vector<Coordinate> Group::getMembers() const
+std::vector<Coordinate> Group::getMembers() const
 {
 	return m_coordinates;
 }

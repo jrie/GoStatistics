@@ -5,7 +5,6 @@
 #include "Coordinate.hpp"
 #include "Turn.hpp"
 
-#include <stdio.h>
 #include <vector>
 
 class Board {
