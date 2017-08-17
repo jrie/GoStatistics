@@ -6,6 +6,8 @@
 // same for endl
 using namespace std;
 
+#include <algorithm> //find
+
 
 /**
  * @brief Standard Constructor which initialized the board to a normal Go board
@@ -238,4 +240,72 @@ void Board::setMinX(int minX)
 void Board::setMinY(int minY)
 {
 	m_minY = minY;
+}
+
+/**
+ * @brief Returns the four Coordinates which are direct neighbours to the given
+ * Coordinate. Returns less Coordinates if there would be neighbours outside of
+ * the board
+ * @param coor The Coordinate in the center
+ * @return vector<Coordinate>
+ */
+vector<Coordinate> Board::getNeighbours(const Coordinate& coor)
+{
+	vector<Coordinate> neighbours;
+	
+	//top
+	if(coor.y() > getMinY())
+	{
+		neighbours.push_back(Coordinate(coor.x(), coor.y() - 1));
+	}
+	
+	//right
+	if(coor.x() < getMaxX())
+	{
+		neighbours.push_back(Coordinate(coor.x() + 1, coor.y()));
+	}
+	
+	//bottom
+	if(coor.y() < getMaxY())
+	{
+		neighbours.push_back(Coordinate(coor.x(), coor.y() + 1));
+	}
+	
+	//left
+	if(coor.x() > getMinX())
+	{
+		neighbours.push_back(Coordinate(coor.x() - 1, coor.y()));
+	}
+	
+	return neighbours;
+}
+
+vector<Coordinate> Board::getNeighbours(const Group& g)
+{
+	vector<Coordinate> neighbours;
+	
+	vector<Coordinate> g_members = g.getMembers();
+	
+	// Iterate through all members of the group
+	for(vector<Coordinate>::iterator it = g_members.begin(); it != g_members.end(); ++it)
+	{
+		// Get all potential neighbours of the current member (Coordinate)
+		vector<Coordinate> possibleNeighbours = getNeighbours(*it);
+		
+		// Check all potential neighbours
+		for(vector<Coordinate>::iterator it = possibleNeighbours.begin(); it != possibleNeighbours.end(); ++it)
+		{
+			// If the potential neighbour is already in the vector it shall not be added
+			if(std::find(neighbours.begin(), neighbours.end(), *it) == neighbours.end())
+			{
+				// Neighbours which are members of the group are no neighbours
+				if(!g.hasMemberAt(*it))
+				{
+					neighbours.push_back(*it);
+				}
+			}
+		}
+	}
+	
+	return neighbours;
 }

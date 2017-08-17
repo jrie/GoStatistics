@@ -39,6 +39,9 @@ public:
 	void setMinX(int minX);
 	void setMinY(int minY);
 	
+	vector<Coordinate> getNeighbours(const Coordinate& coor);
+	vector<Coordinate> getNeighbours(const Group& g);
+	
 private:
 	bool m_currentColor;
 	
