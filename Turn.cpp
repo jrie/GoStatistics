@@ -72,7 +72,7 @@ void Turn::setTarget(Coordinate target)
  * @brief Returns if the object is fully initialized
  * @return true if the object is initialized
  */
-bool Turn::isInitialized()
+bool Turn::isInitialized() const
 {
 	return m_initialized;
 }
@@ -82,7 +82,7 @@ bool Turn::isInitialized()
  * @return true if the turn is valid
  * @todo We need to implement a validation check!
  */
-bool Turn::isValid()
+bool Turn::isValid() const
 {
 	if(!isInitialized())
 		return false;
@@ -95,7 +95,7 @@ bool Turn::isValid()
  * @brief Returns the color of the Stone which will be played
  * @return The color
  */
-bool Turn::getColor()
+bool Turn::getColor() const
 {
 	return m_color;
 }
@@ -104,7 +104,7 @@ bool Turn::getColor()
  * @brief Returns the id of this turn
  * @return The id of this turn
  */
-int Turn::getId()
+int Turn::getId() const
 {
 	return m_id;
 }
@@ -114,7 +114,7 @@ int Turn::getId()
  * @return The target Coordinate
  * @throws Exception if the object is not fully initialized
  */
-Coordinate Turn::getTarget()
+Coordinate Turn::getTarget() const
 {
 	if(!isInitialized())
 	{

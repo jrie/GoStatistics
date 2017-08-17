@@ -9,12 +9,12 @@ public:
 	Turn(bool color, Coordinate target);
 	Turn(const Turn& orig);
 	
-	bool isInitialized();
-	bool isValid();
+	bool isInitialized() const;
+	bool isValid() const;
 	
-	bool getColor();
-	int getId();
-	Coordinate getTarget();
+	bool getColor() const;
+	int getId() const;
+	Coordinate getTarget() const;
 	
 	
 	static int instances;
