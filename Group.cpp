@@ -16,16 +16,6 @@ Group::Group(Coordinate member)
 }
 
 /**
- * @brief Copy Constructor  which creates a new Group object with the values
- * of the given object
- * @param orig The Group object which will be copied
- */
-Group::Group(const Group& orig)
-{
-	m_coordinates = orig.m_coordinates;
-}
-
-/**
  * @brief Adds a given Coordinate to the list of members
  * @param newMember The Coordinate which represents the new member
  * @return true if adding was successfull

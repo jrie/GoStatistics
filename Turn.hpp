@@ -7,7 +7,6 @@ class Turn {
 public:
 	Turn();
 	Turn(bool color, Coordinate target);
-	Turn(const Turn& orig);
 	
 	bool isInitialized() const;
 	bool isValid() const;

@@ -11,8 +11,6 @@ class Group {
 public:
 	Group() =default;
 	Group(Coordinate member);
-	Group(const Group& orig);
-	//virtual ~Group();
 	
 	bool addMember(Coordinate newMember);
 	
