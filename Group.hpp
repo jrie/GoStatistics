@@ -26,8 +26,8 @@ public:
 	
 	void setColor(bool color);
 private:
-	vector<Coordinate> __members;
-	bool __color = false;
+	vector<Coordinate> m_coordinates;
+	bool m_color = false;
 	
 };
 

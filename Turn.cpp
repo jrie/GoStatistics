@@ -11,7 +11,7 @@ int Turn::instances = 0;
  */
 Turn::Turn()
 {
-	__id = Turn::instances;
+	m_id = Turn::instances;
 	Turn::instances++;
 }
 
@@ -22,7 +22,7 @@ Turn::Turn()
  */
 Turn::Turn(bool color, Coordinate target)
 {
-	__id = Turn::instances;
+	m_id = Turn::instances;
 	Turn::instances++;
 	setColor(color);
 	setTarget(target);
@@ -36,10 +36,10 @@ Turn::Turn(bool color, Coordinate target)
  */
 Turn::Turn(const Turn& orig)
 {
-	setColor(orig.__color);
-	setTarget(orig.__target);
-	__id = orig.__id;
-	__initialized = orig.__initialized;
+	setColor(orig.m_color);
+	setTarget(orig.m_target);
+	m_id = orig.m_id;
+	m_initialized = orig.m_initialized;
 }
 
 /**
@@ -48,7 +48,7 @@ Turn::Turn(const Turn& orig)
  */
 void Turn::setColor(bool color)
 {
-	__color = color;
+	m_color = color;
 }
 
 /**
@@ -56,7 +56,7 @@ void Turn::setColor(bool color)
  */
 void Turn::setInitialized()
 {
-	__initialized = true;
+	m_initialized = true;
 }
 
 /**
@@ -65,7 +65,7 @@ void Turn::setInitialized()
  */
 void Turn::setTarget(Coordinate target)
 {
-	__target = target;
+	m_target = target;
 }
 
 /**
@@ -74,7 +74,7 @@ void Turn::setTarget(Coordinate target)
  */
 bool Turn::isInitialized()
 {
-	return __initialized;
+	return m_initialized;
 }
 
 /**
@@ -97,7 +97,7 @@ bool Turn::isValid()
  */
 bool Turn::getColor()
 {
-	return __color;
+	return m_color;
 }
 
 /**
@@ -106,7 +106,7 @@ bool Turn::getColor()
  */
 int Turn::getId()
 {
-	return __id;
+	return m_id;
 }
 
 /**
@@ -122,5 +122,5 @@ Coordinate Turn::getTarget()
 		///\todo I start with this one.
 		throw "Turn is not fully initialized. No target coordinate is available.";
 	}
-	return __target;
+	return m_target;
 }

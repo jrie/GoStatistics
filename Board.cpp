@@ -33,16 +33,16 @@ Board::Board(int maxX, int maxY)
  */
 Board::Board(const Board& orig)
 {
-	__currentColor = orig.__currentColor;
-	__groups = orig.__groups;
-	__initialized = orig.__initialized;
+	m_currentColor = orig.m_currentColor;
+	m_groups = orig.m_groups;
+	m_initialized = orig.m_initialized;
 	
-	__maxX = orig.__maxX;
-	__maxY= orig.__maxY;
-	__minX = orig.__minX;
-	__minY = orig.__minY;
+	m_maxX = orig.m_maxX;
+	m_maxY= orig.m_maxY;
+	m_minX = orig.m_minX;
+	m_minY = orig.m_minY;
 	
-	__turnHistory = orig.__turnHistory;
+	m_turnHistory = orig.m_turnHistory;
 }
 
 /**
@@ -53,8 +53,8 @@ Board::Board(const Board& orig)
 bool Board::addTurnHistory(vector<Turn> turnHistory)
 {
 	//Prealocate memory to improve performance
-	__turnHistory.reserve(turnHistory.size());
-	__turnHistory.insert(__turnHistory.end(), turnHistory.begin(), turnHistory.end());
+	m_turnHistory.reserve(turnHistory.size());
+	m_turnHistory.insert(m_turnHistory.end(), turnHistory.begin(), turnHistory.end());
 	return true;
 }
 
@@ -99,7 +99,7 @@ void Board::changeColor()
  */
 bool Board::getColor()
 {
-	return __currentColor;
+	return m_currentColor;
 }
 
 /**
@@ -108,7 +108,7 @@ bool Board::getColor()
  */
 vector<Group> Board::getGroups()
 {
-	return __groups;
+	return m_groups;
 }
 
 /**
@@ -121,7 +121,7 @@ vector<Group> Board::getGroups(bool color)
 	vector<Group> retGroups;
 	// Iterate over the __groups vector to compare the color of the Group with 
 	// the requested one
-	for(vector<Group>::iterator it = __groups.begin(); it != __groups.end(); ++it)
+	for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
 	{
 		if(it->getColor() == getColor())
 		{
@@ -139,7 +139,7 @@ vector<Group> Board::getGroups(bool color)
  */
 int Board::getMaxX()
 {
-	return __maxX;
+	return m_maxX;
 }
 
 /**
@@ -148,7 +148,7 @@ int Board::getMaxX()
  */
 int Board::getMaxY()
 {
-	return __maxY;
+	return m_maxY;
 }
 
 /**
@@ -157,7 +157,7 @@ int Board::getMaxY()
  */
 int Board::getMinX()
 {
-	return __minX;
+	return m_minX;
 }
 
 /**
@@ -166,7 +166,7 @@ int Board::getMinX()
  */
 int Board::getMinY()
 {
-	return __minY;
+	return m_minY;
 }
 
 /**
@@ -175,7 +175,7 @@ int Board::getMinY()
  */
 vector<Turn> Board::getTurnHistory()
 {
-	return __turnHistory;
+	return m_turnHistory;
 }
 
 /**
@@ -184,7 +184,7 @@ vector<Turn> Board::getTurnHistory()
  */
 bool Board::isInitialized()
 {
-	return __initialized;
+	return m_initialized;
 }
 
 /**
@@ -193,7 +193,7 @@ bool Board::isInitialized()
  */
 void Board::setColor(bool color)
 {
-	__currentColor = color;
+	m_currentColor = color;
 }
 
 /**
@@ -201,7 +201,7 @@ void Board::setColor(bool color)
  */
 void Board::setInitialized()
 {
-	__initialized = true;
+	m_initialized = true;
 }
 
 /**
@@ -210,7 +210,7 @@ void Board::setInitialized()
  */
 void Board::setMaxX(int maxX)
 {
-	__maxX = maxX;
+	m_maxX = maxX;
 }
 
 /**
@@ -219,7 +219,7 @@ void Board::setMaxX(int maxX)
  */
 void Board::setMaxY(int maxY)
 {
-	__maxY = maxY;
+	m_maxY = maxY;
 }
 
 /**
@@ -228,7 +228,7 @@ void Board::setMaxY(int maxY)
  */
 void Board::setMinX(int minX)
 {
-	__minX = minX;
+	m_minX = minX;
 }
 
 /**
@@ -237,5 +237,5 @@ void Board::setMinX(int minX)
  */
 void Board::setMinY(int minY)
 {
-	__minY = minY;
+	m_minY = minY;
 }

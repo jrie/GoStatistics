@@ -31,7 +31,7 @@ Group::Group(Coordinate member)
  */
 Group::Group(const Group& orig)
 {
-	__members = orig.__members;
+	m_coordinates = orig.m_coordinates;
 }
 
 /**
@@ -49,7 +49,7 @@ bool Group::addMember(Coordinate newMember)
 	if(hasNeighbour(newMember))
 	{
 		//Add newMember at the End of the vector
-		__members.push_back(newMember);
+		m_coordinates.push_back(newMember);
 		return true;
 	}
 	return false;
@@ -61,7 +61,7 @@ bool Group::addMember(Coordinate newMember)
  */
 bool Group::getColor()
 {
-	return __color;
+	return m_color;
 }
 
 /**
@@ -70,7 +70,7 @@ bool Group::getColor()
  */
 vector<Coordinate> Group::getMembers()
 {
-	return __members;
+	return m_coordinates;
 }
 
 /**
@@ -84,7 +84,7 @@ vector<Coordinate> Group::getNeighbours()
 	vector<Coordinate> neighbours;
 	
 	// Iterate through all members
-	for(vector<Coordinate>::iterator it = __members.begin(); it != __members.end(); ++it)
+	for(vector<Coordinate>::iterator it = m_coordinates.begin(); it != m_coordinates.end(); ++it)
 	{
 		// Get all potential neighbours of the current member
 		vector<Coordinate> possibleNeighbours = it->getNeighbours();
@@ -113,7 +113,7 @@ vector<Coordinate> Group::getNeighbours()
  */
 int Group::getNumberOfMembers()
 {
-	return __members.size();
+	return m_coordinates.size();
 }
 
 /**
@@ -124,7 +124,7 @@ int Group::getNumberOfMembers()
 bool Group::hasMemberAt(Coordinate coor)
 {
 	///\todo check if we want to use some other datastructur which is mor effizient.
-	return std::find(__members.begin(), __members.end(), coor) != __members.end();
+	return std::find(m_coordinates.begin(), m_coordinates.end(), coor) != m_coordinates.end();
 }
 
 /*
@@ -148,5 +148,5 @@ bool Group::hasNeighbour(Coordinate potentialNeigbour)
  */
 void Group::setColor(bool color)
 {
-	__color = color;
+	m_color = color;
 }
