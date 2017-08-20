@@ -26,7 +26,7 @@ private:
 	
 	bool m_color = false;
 	int m_id = -1;
-	bool m_initialized;
+	bool m_initialized = false;
 	Coordinate m_target;
 };
 
