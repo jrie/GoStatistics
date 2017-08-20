@@ -38,6 +38,11 @@ public:
 	std::vector<Coordinate> getNeighbours(const Coordinate& coor);
 	std::vector<Coordinate> getNeighbours(const Group& g);
 	
+	
+	bool isValid(const Coordinate& coor);
+	bool isValid(const Group& g);
+	bool isValid(const Turn& t);
+	
 private:
 	bool m_currentColor;
 	
