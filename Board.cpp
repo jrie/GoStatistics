@@ -28,22 +28,74 @@ bool Board::addTurnHistory(vector<Turn> turnHistory)
  */
 bool Board::applyTurn(Turn t)
 {
-	cout << "applyTurn(Turn) is currently not implemented" << endl;
-	
 	// Check if turn is valid
-	///@todo We need an implementation for that...
+	if(!isValid(t)) ///@todo We need an implementation for that...
+	{
+		return false;
+	}
 	
 	// Add Turn to Turn history
+	m_turnHistory.push_back(t);
 	
-	
-	// Check if Turn::target Coordinate is neighbour of an existing Group and add it 
-	// to those. Else create a new Group
-	
+	// Check if Turn::target Coordinate is neighbour of an existing Group and 
+	// add it to those. Else create a new Group
+	vector<Group*> neighbourGroups;
+	for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
+	{
+		// The Group and the Coordinate have to have the same color
+		if(t.getColor() != it->getColor())
+		{
+			// If the color is not equal we should check the next Group
+			continue;
+		}
+		
+		if(isNeighbour(t.getTarget(), *it))
+		{
+			// Temporary save of a pointer to the group which the coordinate is a neigbour of
+			neighbourGroups.push_back(&*it);
+		}
+	}
+	// If the Coordinate is a neighbour of one Group add it to it.
+	if(neighbourGroups.size() > 0)
+	{
+		(*neighbourGroups.begin())->addMember(t.getTarget());
+		
+		// If there are more than one Group which has neighbourhood to the Coordinate
+		// we can merge those Groups
+		if(neighbourGroups.size() > 1)
+		{
+			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
+			{
+				(*neighbourGroups.begin())->merge(**it);
+			}
+			
+			// Removing every Group which has been merged from the m_groups vector
+			// Note: begin() + 1
+			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
+			{
+				vector<Group>::iterator toRemove = std::find(m_groups.begin(), m_groups.end(), **it);
+				
+				m_groups.erase(toRemove);
+			}
+			
+		}
+	}
+	else // else we should create a new Group
+	{
+		Group newGroup(t.getTarget());
+		newGroup.setColor(t.getColor());
+		m_groups.push_back(newGroup);
+	}
 	
 	// Remove stones from enemy 
 	// ... and ...
 	// Calculate current sum for removed stones
+	///@todo Implementation needed.
 	
+	// ...
+	
+	// Change color
+	changeColor();
 	
 	// Done.
 	return false;
