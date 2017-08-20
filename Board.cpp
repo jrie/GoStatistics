@@ -29,6 +29,23 @@ bool Board::addTurnHistory(vector<Turn> turnHistory)
 bool Board::applyTurn(Turn t)
 {
 	cout << "applyTurn(Turn) is currently not implemented" << endl;
+	
+	// Check if turn is valid
+	///@todo We need an implementation for that...
+	
+	// Add Turn to Turn history
+	
+	
+	// Check if Turn::target Coordinate is neighbour of an existing Group and add it 
+	// to those. Else create a new Group
+	
+	
+	// Remove stones from enemy 
+	// ... and ...
+	// Calculate current sum for removed stones
+	
+	
+	// Done.
 	return false;
 }
 
@@ -275,4 +292,52 @@ vector<Coordinate> Board::getNeighbours(const Group& g)
 	}
 	
 	return neighbours;
+}
+
+/**
+ * @brief Checks if a given Coordinate is valid.
+ * @param coor Coordinate to be checked
+ * @return true if Coordinate is laying on the board
+ */
+bool Board::isValid(const Coordinate& coor)
+{
+	return (coor.x() <= getMaxX() && coor.x() >= getMinX() &&
+			coor.y() <= getMaxY() && coor.y() >= getMinY());
+}
+
+/**
+ * @brief Checks if a given Group is valid.
+ * @note A Group is valid if all members are valid
+ * @param g Group to be checked
+ * @return  true if the Group is valid
+ */
+bool Board::isValid(const Group& g)
+{
+	vector<Coordinate> g_members = g.getMembers();
+	for(vector<Coordinate>::iterator it = g_members.begin(); it != g_members.end(); ++it)
+	{
+		if(!isValid(*it))
+		{
+			return false;
+		}
+	}
+	
+	///@todo maybe we should also check if the Group only consists of members which
+	/// are all neighbours (are connected to another member)
+	
+	// ...
+	
+	return true;
+}
+
+/**
+ * @brief
+ * @param t
+ * @return 
+ * @todo We need an implementation here...
+ */
+bool Board::isValid(const Turn& t)
+{
+	cout << "isValid(Turn) is currently not implemented" << endl;
+	return true;
 }
