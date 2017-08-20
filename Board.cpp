@@ -341,3 +341,42 @@ bool Board::isValid(const Turn& t)
 	cout << "isValid(Turn) is currently not implemented" << endl;
 	return true;
 }
+
+/**
+ * @brief Checks if the to given Coordinates are neighbours of each other
+ * @param coorToCheck The Coordinate which could be a neighbour of the second one
+ * @param coor The Coordinate which will provide the neighbours
+ * @return true if the two coordinates are neighbours
+ */
+bool Board::isNeighbour(const Coordinate& coorToCheck, const Coordinate& coor)
+{
+	vector<Coordinate> neighbours = getNeighbours(coor);
+	
+	for(vector<Coordinate>::iterator it = neighbours.begin(); it != neighbours.end(); ++it)
+	{
+		if(*it == coorToCheck)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * @brief Checks if the to given Coordinate is a neighbour of the given Group
+ * @param coorToCheck The Coordinate which could be a neighbour of the Group
+ * @param g The Group which will provide the neighbours
+ * @return true if the Coordinate is a neighbour of the Group
+ */
+bool Board::isNeighbour(const Coordinate& coorToCheck, const Group& g)
+{
+	vector<Coordinate> neighbours = getNeighbours(g);
+	for(vector<Coordinate>::iterator it = neighbours.begin(); it != neighbours.end(); ++it)
+	{
+		if(*it == coorToCheck)
+		{
+			return true;
+		}
+	}
+	return false;
+}

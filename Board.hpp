@@ -43,6 +43,9 @@ public:
 	bool isValid(const Group& g);
 	bool isValid(const Turn& t);
 	
+	bool isNeighbour(const Coordinate& coorToCheck, const Coordinate& coor);
+	bool isNeighbour(const Coordinate& coorToCheck, const Group& g);
+	
 private:
 	bool m_currentColor;
 	
