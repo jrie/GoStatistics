@@ -27,5 +27,15 @@ private:
 	
 };
 
+inline bool operator==(const Group& lhs, const Group& rhs)
+{
+	return lhs.getColor() == rhs.getColor() && lhs.getMembers() == rhs.getMembers();
+}
+
+inline bool operator!=(const Group& lhs, const Group& rhs)
+{
+	return not (lhs == rhs);
+}
+
 #endif /* GROUP_HPP */
 
