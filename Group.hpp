@@ -16,7 +16,9 @@ public:
 	std::vector<Coordinate> getMembers() const;
 	int getNumberOfMembers() const;
 	
-	bool hasMemberAt(Coordinate& coor) const;
+	bool hasMemberAt(const Coordinate& coor) const;
+	
+	unsigned int merge(const Group& g);
 	
 	void setColor(bool color);
 private:

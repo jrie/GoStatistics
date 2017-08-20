@@ -64,10 +64,29 @@ int Group::getNumberOfMembers() const
  * @param coor Coordinate which could be a member
  * @return true if coor is a member of the group
  */
-bool Group::hasMemberAt(Coordinate& coor) const
+bool Group::hasMemberAt(const Coordinate& coor) const
 {
 	///\todo check if we want to use some other datastructur which is mor effizient.
 	return std::find(m_coordinates.begin(), m_coordinates.end(), coor) != m_coordinates.end();
+}
+
+/**
+ * @brief Merges two groups by copying the given Group into this one.
+ * @param g Group which will be merged into this Group
+ * @return Number of merged members
+ */
+unsigned int Group::merge(const Group& g)
+{
+	unsigned int i = 0;
+	for(std::vector<Coordinate>::const_iterator it = g.m_coordinates.begin(); it != g.m_coordinates.end(); ++it)
+	{
+		if(addMember(*it))
+		{
+			i++;
+		}
+	}
+	
+	return i;
 }
 
 /**
