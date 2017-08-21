@@ -151,11 +151,11 @@ vector<Group> Board::getGroups()
 vector<Group> Board::getGroups(bool color)
 {
 	vector<Group> retGroups;
-	// Iterate over the __groups vector to compare the color of the Group with 
+	// Iterate over the m_groups vector to compare the color of the Group with 
 	// the requested one
 	for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
 	{
-		if(it->getColor() == getColor())
+		if(it->getColor() == color)
 		{
 			// Adding the Group to the end of the return vector
 			retGroups.push_back(*it);
