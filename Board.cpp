@@ -374,10 +374,21 @@ bool Board::isValid(const Group& g)
 		}
 	}
 	
-	///@todo maybe we should also check if the Group only consists of members which
-	/// are all neighbours (are connected to another member)
-	
-	// ...
+	// Checking if all members of the Group are neighbours of each other
+	// So that all members are connected to each other
+	for(vector<Coordinate>::iterator it = g_members.begin(); it != g_members.end(); ++it)
+	{
+		vector<Coordinate> neighbours = getNeighbours(*it);
+		
+		for(vector<Coordinate>::iterator it2 = neighbours.begin(); it != neighbours.end(); ++it)
+		{
+			if(g.hasMemberAt(*it2))
+			{
+				continue;
+			}
+			return false;
+		}
+	}
 	
 	return true;
 }
