@@ -8,6 +8,12 @@ using namespace std;
 
 #include <algorithm> //find
 
+void Board::initPoints()
+{
+	m_points.insert({false, 0.5}); // Komi
+	m_points.insert({true, 0});
+}
+
 /**
  * @brief Adds the given history of Turns to the history of Turns
  * @param turnHistory vector<Turn> which will be added to the history of Turns
@@ -87,12 +93,64 @@ bool Board::applyTurn(Turn t)
 		m_groups.push_back(newGroup);
 	}
 	
-	// Remove stones from enemy 
-	// ... and ...
-	// Calculate current sum for removed stones
-	///@todo Implementation needed.
+	// ###
+	// Removing catched Groups/Stones
+	// ###
 	
-	// ...
+	// Extract the Groups by color
+	vector<Group> enemyGroups = getGroups(!getColor());
+	vector<Group> friendGroups = getGroups(getColor());
+	
+	// Generate a vector of all own stones
+	vector<Coordinate> friendStones;
+	
+	for(vector<Group>::iterator it = friendGroups.begin(); it != friendGroups.end(); ++it)
+	{
+		vector<Coordinate> friendStoneFromGroup = it->getMembers();
+		friendStones.insert(friendStones.end(), friendStoneFromGroup.begin(), friendStoneFromGroup.end());
+	}
+	
+	// Check if any enemy Group was catched by the last Turn
+	vector<Group> catchedGroups;
+	for(vector<Group>::iterator it = enemyGroups.begin(); it != enemyGroups.end(); ++it)
+	{
+		vector<Coordinate> groupNeighbours = getNeighbours(*it);
+		bool hasFreedoms = false;
+		for(vector<Coordinate>::iterator it2 = groupNeighbours.begin(); it2 != groupNeighbours.end(); ++it2)
+		{
+			if(std::find(friendStones.begin(), friendStones.end(), *it2) != friendStones.end())
+			{
+				continue;
+			}
+			else
+			{
+				hasFreedoms = true;
+				break;
+			}
+		}
+		if(!hasFreedoms)
+		{
+			catchedGroups.push_back(*it);
+		}
+	}
+	
+	// If any Group were catched we have to remove it from the board
+	if(!catchedGroups.empty())
+	{
+		// We need to add some points to the player and remove the catched Group(s)
+		for(vector<Group>::iterator it = catchedGroups.begin(); it != catchedGroups.end(); ++it)
+		{
+			// Adding Points
+			addPoints(getColor(), it->getNumberOfMembers());
+			
+			// We need to check here if it is an atari and have to block it for the next Turn...
+			///@todo implement this.
+			
+			// Removing that Group from Board
+			vector<Group>::iterator toRemove = std::find(m_groups.begin(), m_groups.end(), *it);
+			m_groups.erase(toRemove);
+		}
+	}
 	
 	// Change color
 	changeColor();
@@ -380,7 +438,7 @@ bool Board::isValid(const Group& g)
 	{
 		vector<Coordinate> neighbours = getNeighbours(*it);
 		
-		for(vector<Coordinate>::iterator it2 = neighbours.begin(); it != neighbours.end(); ++it)
+		for(vector<Coordinate>::iterator it2 = neighbours.begin(); it2 != neighbours.end(); ++it2)
 		{
 			if(g.hasMemberAt(*it2))
 			{
@@ -442,4 +500,14 @@ bool Board::isNeighbour(const Coordinate& coorToCheck, const Group& g)
 		}
 	}
 	return false;
+}
+
+void Board::addPoints(bool color, float points)
+{
+	m_points[color] += points;
+}
+
+float Board::getPoints(bool color)
+{
+	return m_points[color];
 }

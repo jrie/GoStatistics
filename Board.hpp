@@ -6,13 +6,22 @@
 #include "Turn.hpp"
 
 #include <vector>
+#include <map>
 
 class Board {
 public:
-	Board() : m_maxX(19), m_maxY(19) {};
-	Board(int maxX, int maxY) : m_maxX(maxX), m_maxY(maxY) {};
+	Board() : m_maxX(19), m_maxY(19) {
+		initPoints();
+	};
+	Board(int maxX, int maxY) : m_maxX(maxX), m_maxY(maxY) {
+		initPoints();
+	};
+	
+	void initPoints();
 	
 	bool addTurnHistory(std::vector<Turn> turnHistory);
+	
+	void addPoints(bool color, float points);
 	
 	bool applyTurn(Turn t);
 	bool applyTurn(bool color, Coordinate target);
@@ -26,6 +35,8 @@ public:
 	int getMaxY();
 	int getMinX();
 	int getMinY();
+	
+	float getPoints(bool color);
 	
 	std::vector<Turn> getTurnHistory();
 	
@@ -58,6 +69,8 @@ private:
 	int m_maxY;
 	int m_minX = 1;
 	int m_minY = 1;
+	
+	std::map<bool, float> m_points;
 	
 	void setInitialized();
 	
