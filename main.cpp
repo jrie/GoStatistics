@@ -10,6 +10,14 @@
 
 using namespace std;
 
+bool isInteger(const std::string& s)
+{
+	std::string::const_iterator it = s.begin();
+	while(it != s.end() && std::isdigit(*it)) ++it;
+	return !s.empty() && it == s.end();
+}
+
+
 /*
  * 
  */
@@ -23,6 +31,10 @@ int main(int argc, char** argv)
 	
 	// Output instructions...
 	// ...
+	cout << "Type \"exit\" and the programm will stop" << endl;
+	cout << "Type \"show\" and the playground will be displayed" << endl;
+	cout << "To type a field for your stone you have to enter column first followed by " << endl
+		 << "the row. For example h7 or t16" << endl << endl;
 	
 	cout << "The " << blackPlayer << " is black." << endl;
 	cout << "The " << whitePlayer << " is white." << endl;
@@ -58,7 +70,7 @@ int main(int argc, char** argv)
 			b.showField();
 			continue;
 		}
-		else if(input.size() == 2)
+		else if(input.size() == 2 || input.size() == 3)
 		{
 			// to lower case
 			std::transform(input.begin(), input.end(), input.begin(), ::tolower);
@@ -66,9 +78,12 @@ int main(int argc, char** argv)
 			int pos = cols.find(input.at(0), 0);
 			if(pos != cols.npos)
 			{
-				if(isdigit(input.at(1)))
+				string digit = input.substr(1);
+				if(isInteger(digit))
 				{
-					Coordinate coor(pos + 1, input.at(1));
+//					cout << "DEBUG - " << "Number is " << digit << endl;
+//					cout << "DEBUG - " << "Column is " << pos + 1 << endl;
+					Coordinate coor(pos + 1, std::stoul(digit));
 					
 					if(b.applyTurn(b.getColor(), coor))
 					{
