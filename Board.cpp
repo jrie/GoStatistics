@@ -1,6 +1,7 @@
 #include "Board.hpp"
 
 #include <iostream>
+#include <map>
 
 // with this line we do not have to write std::cout and can write cout instead.
 // same for endl
@@ -156,7 +157,7 @@ bool Board::applyTurn(Turn t)
 	changeColor();
 	
 	// Done.
-	return false;
+	return true;
 }
 
 /**
@@ -510,4 +511,94 @@ void Board::addPoints(bool color, float points)
 float Board::getPoints(bool color)
 {
 	return m_points[color];
+}
+
+void Board::showField(int type)
+{
+	switch(type)
+	{
+			// Output with cout in the console
+		case 0:
+		{
+			char blackStone = 'x';
+			char whiteStone = 'o';
+			char freeField = '-';
+
+			map<Coordinate, bool> field;
+			for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
+			{
+				vector<Coordinate> groupMembers = it->getMembers();
+				for(vector<Coordinate>::iterator it2 = groupMembers.begin(); it2 != groupMembers.end(); ++it2)
+				{
+					field[*it2] = it->getColor();
+				}
+			}
+
+//			cout << "DEBUG - Field has " << field.size() << " members!" << endl;
+//			for(auto it = field.begin(); it != field.end(); ++it)
+//			{
+//				cout << "DEBUG - " << it->first.x() << "x" << it->first.y() << " is " << it->second << endl;
+//			}
+			
+			cout << "The current field is shown below." << endl;
+
+			
+			
+			for(unsigned int row = getMaxY(); row >= getMinY(); row--)
+			{
+				cout << row;
+				if(row <= 9)
+				{
+					cout << " ";
+				}
+				cout << " | ";
+				
+				for(unsigned int col = getMinX(); col <= getMaxX(); col++)
+				{
+					Coordinate currentField(col, row);
+					if(field.find(currentField) != field.end())
+					{
+						// There is a stone on the field.
+						if(field[currentField])
+						{
+							// white
+							cout << whiteStone << ' ';
+						}
+						else
+						{
+							// black
+							cout << blackStone << ' ';
+						}
+					}
+					else
+					{
+						// no stone
+						cout << freeField << ' ';
+					}
+				}
+				cout << endl;
+			}
+			string columns = "abcdefghjklmnopqrst";
+
+			cout << "    ";
+			if(getMaxY() > 9)
+			{
+				cout << " ";
+			}
+			
+			for(unsigned int col = getMinX(); col <= getMaxX(); col++)
+			{
+
+				cout << columns.at(col - 1) << ' ';
+			}
+			cout << endl;
+
+			break;
+		}
+		default:
+		{
+			cout << "This type is not implemented now (showField(" << type << "))." << endl;
+			break;
+		}
+	}
 }

@@ -10,10 +10,10 @@
 
 class Board {
 public:
-	Board() : m_maxX(19), m_maxY(19) {
+	Board() : m_maxX(19), m_maxY(19), m_currentColor(false) {
 		initPoints();
 	};
-	Board(int maxX, int maxY) : m_maxX(maxX), m_maxY(maxY) {
+	Board(int maxX, int maxY) : m_maxX(maxX), m_maxY(maxY), m_currentColor(false) {
 		initPoints();
 	};
 	
@@ -56,6 +56,8 @@ public:
 	
 	bool isNeighbour(const Coordinate& coorToCheck, const Coordinate& coor);
 	bool isNeighbour(const Coordinate& coorToCheck, const Group& g);
+	
+	void showField(int type = 0);
 	
 private:
 	bool m_currentColor;
