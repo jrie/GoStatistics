@@ -32,5 +32,32 @@ inline bool operator!=(const Coordinate& lhs, const Coordinate& rhs)
 	return not (lhs == rhs);
 }
 
+inline bool operator<(const Coordinate& lhs, const Coordinate& rhs)
+{
+	if(lhs.y() == rhs.y())
+	{
+		return lhs.x() < rhs.x();
+	}
+	else
+	{
+		return lhs.y() < rhs.y();
+	}
+}
+
+inline bool operator>(const Coordinate& lhs, const Coordinate& rhs)
+{
+	return rhs < lhs;
+}
+
+inline bool operator<=(const Coordinate& lhs, const Coordinate& rhs)
+{
+	return not (lhs > rhs);
+}
+
+inline bool operator>=(const Coordinate& lhs, const Coordinate& rhs)
+{
+	return not (lhs < rhs);
+}
+
 #endif /* COORDINATE_HPP */
 
