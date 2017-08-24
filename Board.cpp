@@ -609,9 +609,59 @@ bool Board::isValid(const Turn& t)
 		tmp_Groups.push_back(newGroup);
 	}
 	
+	// First we have to check if we catch any other group...
 	// Extract the Groups by color
 	vector<Group> enemyGroups = getGroups(!getColor(), tmp_Groups);
 	vector<Group> friendGroups = getGroups(getColor(), tmp_Groups);
+	
+	// Generate a vector of all own stones
+	vector<Coordinate> friendStones;
+	
+	for(vector<Group>::iterator it = friendGroups.begin(); it != friendGroups.end(); ++it)
+	{
+		vector<Coordinate> friendStoneFromGroup = it->getMembers();
+		friendStones.insert(friendStones.end(), friendStoneFromGroup.begin(), friendStoneFromGroup.end());
+	}
+	
+	// Check if any enemy Group was catched by the last Turn
+	vector<Group> catchedGroups;
+	for(vector<Group>::iterator it = enemyGroups.begin(); it != enemyGroups.end(); ++it)
+	{
+		vector<Coordinate> groupNeighbours = getNeighbours(*it);
+		bool hasFreedoms = false;
+		for(vector<Coordinate>::iterator it2 = groupNeighbours.begin(); it2 != groupNeighbours.end(); ++it2)
+		{
+			if(std::find(friendStones.begin(), friendStones.end(), *it2) != friendStones.end())
+			{
+				continue;
+			}
+			else
+			{
+				hasFreedoms = true;
+				break;
+			}
+		}
+		if(!hasFreedoms)
+		{
+			catchedGroups.push_back(*it);
+		}
+	}
+	
+	// If any Group were catched we have to remove it from the board
+	if(!catchedGroups.empty())
+	{
+		// We need to add some points to the player and remove the catched Group(s)
+		for(vector<Group>::iterator it = catchedGroups.begin(); it != catchedGroups.end(); ++it)
+		{
+			// Removing that Group from Board
+			vector<Group>::iterator toRemove = std::find(tmp_Groups.begin(), tmp_Groups.end(), *it);
+			tmp_Groups.erase(toRemove);
+		}
+		
+		// Extract new groups - we have catched some
+		enemyGroups = getGroups(!getColor(), tmp_Groups);
+		friendGroups = getGroups(getColor(), tmp_Groups);
+	}
 	
 	// Generate a vector of all own stones
 	vector<Coordinate> enemyStones;
@@ -622,8 +672,8 @@ bool Board::isValid(const Turn& t)
 		enemyStones.insert(enemyStones.end(), enemyStoneFromGroup.begin(), enemyStoneFromGroup.end());
 	}
 	
-	// Check if any enemy Group was catched by the last Turn
-	vector<Group> catchedGroups;
+	// Check if any enemy Group was catched by the Turn
+	catchedGroups.clear();
 	for(vector<Group>::iterator it = friendGroups.begin(); it != friendGroups.end(); ++it)
 	{
 		vector<Coordinate> groupNeighbours = getNeighbours(*it);
