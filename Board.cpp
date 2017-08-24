@@ -406,6 +406,25 @@ vector<Coordinate> Board::getNeighbours(const Group& g)
 	return neighbours;
 }
 
+vector<Coordinate> Board::getAllStones()
+{
+	vector<Coordinate> stones;
+	for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
+	{
+		vector<Coordinate> stonesFromGroup = it->getMembers();
+		stones.insert(stones.end(), stonesFromGroup.begin(), stonesFromGroup.end());
+	}
+	
+	return stones;
+}
+
+bool Board::isFree(const Coordinate& coor)
+{
+	vector<Coordinate> allStones = getAllStones();
+	
+	return std::find(allStones.begin(), allStones.end(), coor) != allStones.end();
+}
+
 /**
  * @brief Checks if a given Coordinate is valid.
  * @param coor Coordinate to be checked
@@ -463,21 +482,25 @@ bool Board::isValid(const Turn& t)
 {
 	cout << "isValid(Turn) is currently not implemented" << endl;
 	// Check if the Turn color is the same as the current Board color
-	if(t->getColor() != getColor())
+	if(t.getColor() != getColor())
 	{
 		// A player is not allowed to move twice
 		return false;
 	}
 	
 	// Check if the target Coordinate is valid 
-	if(!isValid(t->getTarget()))
+	if(!isValid(t.getTarget()))
 	{
 		// The Coordinate is not valid
 		return false;
 	}
 	
 	// Check if the target Coordinate is a free field on the board
-	
+	if(!isFree(t.getTarget()))
+	{
+		// The Coordinate is not a free field
+		return false;
+	}
 	
 	// Check if we do not kill an friendly group
 	
