@@ -135,7 +135,8 @@ bool Board::applyTurn(Turn t)
 		}
 	}
 	
-	removedStonesLastTurn = 0;
+	m_numberOfRemovedStonesLastTurn = 0;
+	m_removedStonesLastTurn.clear();
 	// If any Group were catched we have to remove it from the board
 	if(!catchedGroups.empty())
 	{
@@ -144,10 +145,15 @@ bool Board::applyTurn(Turn t)
 		{
 			// Adding Points
 			addPoints(getColor(), it->getNumberOfMembers());
-			removedStonesLastTurn += it->getNumberOfMembers();
-			// We need to check here if it is an atari and have to block it for the next Turn...
+			// We need to check here if it is an atari and have to block it for
+			// the next Turn...
 			
-			// it will be blocked by isValid(Turn) by checking the last element of Turnhistory and removedStonesLastTurn == 1
+			// it will be blocked by isValid(Turn) by checking the last element
+			// of Turnhistory and removedStonesLastTurn == 1 and 
+			// the Coordinate in m_removedStonesLastTurn
+			m_numberOfRemovedStonesLastTurn += it->getNumberOfMembers();
+			vector<Coordinate> removingStones = it->getMembers();
+			m_removedStonesLastTurn.insert(m_removedStonesLastTurn.end(), removingStones.begin(), removingStones.end());
 			
 			// Removing that Group from Board
 			vector<Group>::iterator toRemove = std::find(m_groups.begin(), m_groups.end(), *it);
@@ -215,6 +221,30 @@ vector<Group> Board::getGroups(bool color)
 	// Iterate over the m_groups vector to compare the color of the Group with 
 	// the requested one
 	for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
+	{
+		if(it->getColor() == color)
+		{
+			// Adding the Group to the end of the return vector
+			retGroups.push_back(*it);
+		}
+	}
+	
+	return retGroups;
+}
+
+/**
+ * @brief Returns the groups which belong to the given color and are members of
+ * the given groupList
+ * @param color The color of the groups which are requested
+ * @param groupList The vector of Groups which shall be considered
+ * @return vector<Group> groups of the given color
+ */
+vector<Group> Board::getGroups(bool color, const vector<Group>& groupList)
+{
+	vector<Group> retGroups;
+	// Iterate over the m_groups vector to compare the color of the Group with 
+	// the requested one
+	for(vector<Group>::const_iterator it = groupList.begin(); it != groupList.end(); ++it)
 	{
 		if(it->getColor() == color)
 		{
@@ -490,33 +520,148 @@ bool Board::isValid(const Group& g)
 bool Board::isValid(const Turn& t)
 {
 	cout << "isValid(Turn) is currently not implemented" << endl;
+	// ###
 	// Check if the Turn color is the same as the current Board color
+	// ###
 	if(t.getColor() != getColor())
 	{
 		// A player is not allowed to move twice
 		return false;
 	}
 	
+	// ###
 	// Check if the target Coordinate is valid 
+	// ###
 	if(!isValid(t.getTarget()))
 	{
 		// The Coordinate is not valid
 		return false;
 	}
 	
+	// ###
 	// Check if the target Coordinate is a free field on the board
+	// ###
 	if(!isFree(t.getTarget()))
 	{
 		// The Coordinate is not a free field
 		return false;
 	}
 	
+	// ###
 	// Check if we do not kill a friendly group
+	// ###
 	
+	// Check if Turn::target Coordinate is neighbour of an existing Group and 
+	// add it to those. Else create a new Group
 	
+	// Deep copy the group List to not modify the real one!
+	// The cast forces a deep copy of the vector
+	vector<Group> tmp_Groups = (const vector<Group>) m_groups;
+	
+	vector<Group*> neighbourGroups;
+	for(vector<Group>::iterator it = tmp_Groups.begin(); it != tmp_Groups.end(); ++it)
+	{
+		// The Group and the Coordinate have to have the same color
+		if(t.getColor() != it->getColor())
+		{
+			// If the color is not equal we should check the next Group
+			continue;
+		}
+		
+		if(isNeighbour(t.getTarget(), *it))
+		{
+			// Temporary save of a pointer to the group which the coordinate is a neigbour of
+			neighbourGroups.push_back(&*it);
+		}
+	}
+	// If the Coordinate is a neighbour of one Group add it to it.
+	if(neighbourGroups.size() > 0)
+	{
+		(*neighbourGroups.begin())->addMember(t.getTarget());
+		
+		// If there are more than one Group which has neighbourhood to the Coordinate
+		// we can merge those Groups
+		if(neighbourGroups.size() > 1)
+		{
+			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
+			{
+				(*neighbourGroups.begin())->merge(**it);
+			}
+			
+			// Removing every Group which has been merged from the m_groups vector
+			// Note: begin() + 1
+			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
+			{
+				vector<Group>::iterator toRemove = std::find(tmp_Groups.begin(), tmp_Groups.end(), **it);
+				
+				tmp_Groups.erase(toRemove);
+			}
+		}
+	}
+	else // else we should create a new Group
+	{
+		Group newGroup(t.getTarget());
+		newGroup.setColor(t.getColor());
+		tmp_Groups.push_back(newGroup);
+	}
+	
+	// Extract the Groups by color
+	vector<Group> enemyGroups = getGroups(!getColor(), tmp_Groups);
+	vector<Group> friendGroups = getGroups(getColor(), tmp_Groups);
+	
+	// Generate a vector of all own stones
+	vector<Coordinate> enemyStones;
+	
+	for(vector<Group>::iterator it = enemyGroups.begin(); it != enemyGroups.end(); ++it)
+	{
+		vector<Coordinate> enemyStoneFromGroup = it->getMembers();
+		enemyStones.insert(enemyStones.end(), enemyStoneFromGroup.begin(), enemyStoneFromGroup.end());
+	}
+	
+	// Check if any enemy Group was catched by the last Turn
+	vector<Group> catchedGroups;
+	for(vector<Group>::iterator it = friendGroups.begin(); it != friendGroups.end(); ++it)
+	{
+		vector<Coordinate> groupNeighbours = getNeighbours(*it);
+		bool hasFreedoms = false;
+		for(vector<Coordinate>::iterator it2 = groupNeighbours.begin(); it2 != groupNeighbours.end(); ++it2)
+		{
+			if(std::find(enemyStones.begin(), enemyStones.end(), *it2) != enemyStones.end())
+			{
+				continue;
+			}
+			else
+			{
+				hasFreedoms = true;
+				break;
+			}
+		}
+		if(!hasFreedoms)
+		{
+			catchedGroups.push_back(*it);
+		}
+	}
+	
+	// If any Group were catched we have to remove it from the board
+	if(!catchedGroups.empty())
+	{
+		// A friendly Group was catched so we would kill a friendly Group by
+		// processing this Turn.
+		return false;
+	}
+	
+	// ###
 	// Check if we do not place a stone at a field where an atari was one turn before
-	
-	
+	// ###
+	// If exactly one stone was removed last Turn we have to check if we want to place it again
+	if(m_numberOfRemovedStonesLastTurn == 1)
+	{
+		if(std::find(m_removedStonesLastTurn.begin(), m_removedStonesLastTurn.end(), t.getTarget()) != m_removedStonesLastTurn.end())
+		{
+			// The stone which should be placed is the same as was removed before
+			return false;
+		}
+	}
 	
 	return true;
 }

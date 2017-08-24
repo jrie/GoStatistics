@@ -31,6 +31,7 @@ public:
 	bool getColor();
 	std::vector<Group> getGroups();
 	std::vector<Group> getGroups(bool color);
+	std::vector<Group> getGroups(bool color, const std::vector<Group>& groupList);
 	int getMaxX();
 	int getMaxY();
 	int getMinX();
@@ -74,7 +75,8 @@ private:
 	int m_minY = 1;
 	
 	std::map<bool, float> m_points;
-	unsigned int removedStonesLastTurn = 0;
+	unsigned int m_numberOfRemovedStonesLastTurn = 0;
+	std::vector<Coordinate> m_removedStonesLastTurn;
 	
 	void setInitialized();
 	
