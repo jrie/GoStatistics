@@ -73,6 +73,7 @@ private:
 	int m_minY = 1;
 	
 	std::map<bool, float> m_points;
+	unsigned int removedStonesLastTurn = 0;
 	
 	void setInitialized();
 	

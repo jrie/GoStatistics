@@ -135,6 +135,7 @@ bool Board::applyTurn(Turn t)
 		}
 	}
 	
+	removedStonesLastTurn = 0;
 	// If any Group were catched we have to remove it from the board
 	if(!catchedGroups.empty())
 	{
@@ -143,9 +144,10 @@ bool Board::applyTurn(Turn t)
 		{
 			// Adding Points
 			addPoints(getColor(), it->getNumberOfMembers());
-			
+			removedStonesLastTurn += it->getNumberOfMembers();
 			// We need to check here if it is an atari and have to block it for the next Turn...
-			///@todo implement this.
+			
+			// it will be blocked by isValid(Turn) by checking the last element of Turnhistory and removedStonesLastTurn == 1
 			
 			// Removing that Group from Board
 			vector<Group>::iterator toRemove = std::find(m_groups.begin(), m_groups.end(), *it);
@@ -368,7 +370,6 @@ vector<Coordinate> Board::getNeighbours(const Coordinate& coor)
 	
 	return neighbours;
 }
-
 
 /**
  * @brief Returns a vector of all neighbours of the group
