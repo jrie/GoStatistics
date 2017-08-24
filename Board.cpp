@@ -461,7 +461,7 @@ bool Board::isFree(const Coordinate& coor)
 {
 	vector<Coordinate> allStones = getAllStones();
 	
-	return std::find(allStones.begin(), allStones.end(), coor) != allStones.end();
+	return std::find(allStones.begin(), allStones.end(), coor) == allStones.end();
 }
 
 /**
@@ -519,13 +519,13 @@ bool Board::isValid(const Group& g)
  */
 bool Board::isValid(const Turn& t)
 {
-	cout << "isValid(Turn) is currently not implemented" << endl;
 	// ###
 	// Check if the Turn color is the same as the current Board color
 	// ###
 	if(t.getColor() != getColor())
 	{
 		// A player is not allowed to move twice
+		cout << "DEBUG - Invalid Turn: " << "Not the correct color" << endl;
 		return false;
 	}
 	
@@ -535,6 +535,8 @@ bool Board::isValid(const Turn& t)
 	if(!isValid(t.getTarget()))
 	{
 		// The Coordinate is not valid
+		
+		cout << "DEBUG - Invalid Turn: " << "Invalid Coordinate" << endl;
 		return false;
 	}
 	
@@ -544,6 +546,8 @@ bool Board::isValid(const Turn& t)
 	if(!isFree(t.getTarget()))
 	{
 		// The Coordinate is not a free field
+		
+		cout << "DEBUG - Invalid Turn: " << "Target not free" << endl;
 		return false;
 	}
 	
@@ -647,6 +651,8 @@ bool Board::isValid(const Turn& t)
 	{
 		// A friendly Group was catched so we would kill a friendly Group by
 		// processing this Turn.
+		
+		cout << "DEBUG - Invalid Turn: " << "Friendly group was catched" << endl;
 		return false;
 	}
 	
@@ -659,6 +665,8 @@ bool Board::isValid(const Turn& t)
 		if(std::find(m_removedStonesLastTurn.begin(), m_removedStonesLastTurn.end(), t.getTarget()) != m_removedStonesLastTurn.end())
 		{
 			// The stone which should be placed is the same as was removed before
+			
+			cout << "DEBUG - Invalid Turn: " << "Atari rule" << endl;
 			return false;
 		}
 	}
