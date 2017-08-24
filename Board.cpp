@@ -463,14 +463,28 @@ bool Board::isValid(const Turn& t)
 {
 	cout << "isValid(Turn) is currently not implemented" << endl;
 	// Check if the Turn color is the same as the current Board color
+	if(t->getColor() != getColor())
+	{
+		// A player is not allowed to move twice
+		return false;
+	}
 	
 	// Check if the target Coordinate is valid 
+	if(!isValid(t->getTarget()))
+	{
+		// The Coordinate is not valid
+		return false;
+	}
 	
 	// Check if the target Coordinate is a free field on the board
 	
+	
 	// Check if we do not kill an friendly group
 	
+	
 	// Check if we do not place a stone at a field where an atari was one turn before
+	
+	
 	
 	return true;
 }
