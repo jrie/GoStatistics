@@ -406,6 +406,10 @@ vector<Coordinate> Board::getNeighbours(const Group& g)
 	return neighbours;
 }
 
+/**
+ * @brief Returns all stones which are placed on the board
+ * @return vector<Coordinate> all stones on the board
+ */
 vector<Coordinate> Board::getAllStones()
 {
 	vector<Coordinate> stones;
@@ -418,6 +422,11 @@ vector<Coordinate> Board::getAllStones()
 	return stones;
 }
 
+/**
+ * @brief Returns whether a Coordinate on the board is free or a stone is already placed on it
+ * @param coor The Coordinate to be checked
+ * @return true if no other stone was placed on the Coordinate
+ */
 bool Board::isFree(const Coordinate& coor)
 {
 	vector<Coordinate> allStones = getAllStones();
@@ -502,7 +511,7 @@ bool Board::isValid(const Turn& t)
 		return false;
 	}
 	
-	// Check if we do not kill an friendly group
+	// Check if we do not kill a friendly group
 	
 	
 	// Check if we do not place a stone at a field where an atari was one turn before
