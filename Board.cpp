@@ -736,13 +736,19 @@ void Board::showField(int type)
 			char freeField = '-';
 
 			map<Coordinate, bool> field;
-			for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
+			vector<Group> whiteGroups = getGroups(true, m_groups);
+			vector<Group> blackGroups = getGroups(false, m_groups);
+			
+			vector<Coordinate> whiteStones = getCoordinates(whiteGroups);
+			vector<Coordinate> blackStones = getCoordinates(blackGroups);
+			
+			for(vector<Coordinate>::iterator it = whiteStones.begin(); it != whiteStones.end(); ++it)
 			{
-				vector<Coordinate> groupMembers = it->getMembers();
-				for(vector<Coordinate>::iterator it2 = groupMembers.begin(); it2 != groupMembers.end(); ++it2)
-				{
-					field[*it2] = it->getColor();
-				}
+				field[*it] = true;
+			}
+			for(vector<Coordinate>::iterator it = blackStones.begin(); it != blackStones.end(); ++it)
+			{
+				field[*it] = false;
 			}
 
 //			cout << "DEBUG - Field has " << field.size() << " members!" << endl;
