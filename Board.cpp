@@ -198,9 +198,9 @@ std::vector<Coordinate> Board::getCoordinates(const std::vector<Group>& groups)
 {
 	vector<Coordinate> allCoordinates;
 	
-	for(vector<Group>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+	for(const auto& group : groups)
 	{
-		vector<Coordinate> coordinatesOfGroup = it->getMembers();
+		vector<Coordinate> coordinatesOfGroup = group.getMembers();
 		allCoordinates.insert(allCoordinates.end(), coordinatesOfGroup.begin(), coordinatesOfGroup.end());
 	}
 	
@@ -224,13 +224,13 @@ vector<Group> Board::getCatchedGroups(const bool color, const vector<Group>& gro
 	
 	// Check if any enemy Group was catched by the last Turn
 	vector<Group> catchedGroups;
-	for(vector<Group>::const_iterator it = enemyGroups.begin(); it != enemyGroups.end(); ++it)
+	for(const auto& enemyGroup : enemyGroups)
 	{
-		vector<Coordinate> groupNeighbours = getNeighbours(*it);
+		vector<Coordinate> groupNeighbours = getNeighbours(enemyGroup);
 		bool hasFreedoms = false;
-		for(vector<Coordinate>::const_iterator it2 = groupNeighbours.begin(); it2 != groupNeighbours.end(); ++it2)
+		for(const auto& neighbour : groupNeighbours)
 		{
-			if(std::find(friendStones.begin(), friendStones.end(), *it2) != friendStones.end())
+			if(std::find(friendStones.begin(), friendStones.end(), neighbour) != friendStones.end())
 			{
 				continue;
 			}
@@ -242,7 +242,7 @@ vector<Group> Board::getCatchedGroups(const bool color, const vector<Group>& gro
 		}
 		if(!hasFreedoms)
 		{
-			catchedGroups.push_back(*it);
+			catchedGroups.push_back(enemyGroup);
 		}
 	}
 	
@@ -280,12 +280,12 @@ vector<Group> Board::getGroups(bool color, const vector<Group>& groupList)
 	vector<Group> retGroups;
 	// Iterate over the m_groups vector to compare the color of the Group with 
 	// the requested one
-	for(vector<Group>::const_iterator it = groupList.begin(); it != groupList.end(); ++it)
+	for(const auto& group : groupList)
 	{
-		if(it->getColor() == color)
+		if(group.getColor() == color)
 		{
 			// Adding the Group to the end of the return vector
-			retGroups.push_back(*it);
+			retGroups.push_back(group);
 		}
 	}
 	
@@ -358,13 +358,13 @@ vector<Coordinate> Board::removeGroups(const std::vector<Group>& groupsToRemove,
 	if(!groupsToRemove.empty())
 	{
 		// We need to add some points to the player and remove the catched Group(s)
-		for(vector<Group>::const_iterator it = groupsToRemove.begin(); it != groupsToRemove.end(); ++it)
+		for(const auto& group : groups)
 		{
 			// Removing that Group from Group Vector
-			vector<Group>::iterator toRemove = std::find(groups.begin(), groups.end(), *it);
+			vector<Group>::iterator toRemove = std::find(groups.begin(), groups.end(), group);
 			if(toRemove != groups.end())
 			{
-				vector<Coordinate> memberCoordinates = it->getMembers();
+				vector<Coordinate> memberCoordinates = group.getMembers();
 				removedStones.insert(removedStones.end(), memberCoordinates.begin(), memberCoordinates.end());
 				groups.erase(toRemove);
 			}
@@ -477,21 +477,21 @@ vector<Coordinate> Board::getNeighbours(const Group& g)
 	vector<Coordinate> g_members = g.getMembers();
 	
 	// Iterate through all members of the group
-	for(vector<Coordinate>::iterator it = g_members.begin(); it != g_members.end(); ++it)
+	for(const auto& coor : g_members)
 	{
 		// Get all potential neighbours of the current member (Coordinate)
-		vector<Coordinate> possibleNeighbours = getNeighbours(*it);
+		vector<Coordinate> possibleNeighbours = getNeighbours(coor);
 		
 		// Check all potential neighbours
-		for(vector<Coordinate>::iterator it = possibleNeighbours.begin(); it != possibleNeighbours.end(); ++it)
+		for(auto& neighbour : possibleNeighbours)
 		{
 			// If the potential neighbour is already in the vector it shall not be added
-			if(std::find(neighbours.begin(), neighbours.end(), *it) == neighbours.end())
+			if(std::find(neighbours.begin(), neighbours.end(), neighbour) == neighbours.end())
 			{
 				// Neighbours which are members of the group are no neighbours
-				if(!g.hasMemberAt(*it))
+				if(!g.hasMemberAt(neighbour))
 				{
-					neighbours.push_back(*it);
+					neighbours.push_back(neighbour);
 				}
 			}
 		}
