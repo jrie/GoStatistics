@@ -21,12 +21,12 @@ public:
 	
 	bool addTurnHistory(std::vector<Turn> turnHistory);
 	
-	int addTurnToGroups(const Turn& t, std::vector<Group>& groups);
-	
 	void addPoints(bool color, float points);
 	
 	bool applyTurn(Turn t);
 	bool applyTurn(bool color, Coordinate target);
+	
+	int applyTurnToGroups(const Turn& t, std::vector<Group>& groups);
 	
 	void changeColor();
 	

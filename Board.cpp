@@ -29,6 +29,138 @@ bool Board::addTurnHistory(vector<Turn> turnHistory)
 }
 
 /**
+ * @brief Apply the given Turn to the Board and recalculates the groups and so on
+ * @param t The turn to be performed
+ * @return true on success
+ */
+bool Board::applyTurn(Turn t)
+{
+	// Check if turn is valid
+	if(!isValid(t)) ///@todo We need an implementation for that...
+	{
+		return false;
+	}
+	
+	// Add Turn to Turn history
+	m_turnHistory.push_back(t);
+	
+	// Add the new stone to the Groups
+	if(applyTurnToGroups(t, m_groups) == -1)
+	{
+		// Could not add the stone to any Group because a Group has allready a member at the 
+		// given Coordinate.
+		// This should never be happend because isValid(Turn) and getNeighbours(Group)
+		// would be incorrect if this happens.
+		return false;
+	}
+	
+//	// Check if Turn::target Coordinate is neighbour of an existing Group and 
+//	// add it to those. Else create a new Group
+//	vector<Group*> neighbourGroups;
+//	for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
+//	{
+//		// The Group and the Coordinate have to have the same color
+//		if(t.getColor() != it->getColor())
+//		{
+//			// If the color is not equal we should check the next Group
+//			continue;
+//		}
+//		
+//		if(isNeighbour(t.getTarget(), *it))
+//		{
+//			// Temporary save of a pointer to the group which the coordinate is a neigbour of
+//			neighbourGroups.push_back(&*it);
+//		}
+//	}
+//	// If the Coordinate is a neighbour of one Group add it to it.
+//	if(neighbourGroups.size() > 0)
+//	{
+//		(*neighbourGroups.begin())->addMember(t.getTarget());
+//		
+//		// If there are more than one Group which has neighbourhood to the Coordinate
+//		// we can merge those Groups
+//		if(neighbourGroups.size() > 1)
+//		{
+//			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
+//			{
+//				(*neighbourGroups.begin())->merge(**it);
+//			}
+//			
+//			// Removing every Group which has been merged from the m_groups vector
+//			// Note: begin() + 1
+//			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
+//			{
+//				vector<Group>::iterator toRemove = std::find(m_groups.begin(), m_groups.end(), **it);
+//				
+//				m_groups.erase(toRemove);
+//			}
+//			
+//		}
+//	}
+//	else // else we should create a new Group
+//	{
+//		Group newGroup(t.getTarget());
+//		newGroup.setColor(t.getColor());
+//		m_groups.push_back(newGroup);
+//	}
+	
+	// ###
+	// Removing catched Groups/Stones
+	// ###
+	
+	// Check if any enemy Group was catched by the last Turn
+	vector<Group> catchedGroups = getCatchedGroups(getColor(), m_groups);
+	
+	m_numberOfRemovedStonesLastTurn = 0;
+	m_removedStonesLastTurn.clear();
+	// If any Group were catched we have to remove it from the board
+	if(!catchedGroups.empty())
+	{
+		// We need to add some points to the player and remove the catched Group(s)
+		for(vector<Group>::iterator it = catchedGroups.begin(); it != catchedGroups.end(); ++it)
+		{
+			// Adding Points
+			addPoints(getColor(), it->getNumberOfMembers());
+			// We need to check here if it is an atari and have to block it for
+			// the next Turn...
+			
+			// it will be blocked by isValid(Turn) by checking the last element
+			// of Turnhistory and removedStonesLastTurn == 1 and 
+			// the Coordinate in m_removedStonesLastTurn
+			m_numberOfRemovedStonesLastTurn += it->getNumberOfMembers();
+			vector<Coordinate> removingStones = it->getMembers();
+			m_removedStonesLastTurn.insert(m_removedStonesLastTurn.end(), removingStones.begin(), removingStones.end());
+			
+			// Removing that Group from Board
+			vector<Group>::iterator toRemove = std::find(m_groups.begin(), m_groups.end(), *it);
+			m_groups.erase(toRemove);
+		}
+	}
+	
+	// Change color
+	changeColor();
+	
+	// Done.
+	return true;
+}
+
+/**
+ * @brief Creates a Turn from the given params and calls the real applyTurn function
+ * @param color The color of the player
+ * @param target The Coordinate of the target
+ * @return true on success
+ * @note This is an alternative signature for the other applyTurn function
+ */
+bool Board::applyTurn(bool color, Coordinate target)
+{
+	//create Turn
+	Turn t(color, target);
+	
+	//call the function above
+	return applyTurn(t);
+}
+
+/**
  * @brief This function adds the, by Turn spezified, Coordinate to the Group which has 
  * a neighbour at the given Coordinate. If multiple Groups has neighbours at that Coordinate 
  * these Groups will be merged into one Group. If no Group of the same color has a neighbour there, 
@@ -38,7 +170,7 @@ bool Board::addTurnHistory(vector<Turn> turnHistory)
  * @return 0 if a new Group were created. 1 if the Turn could be merged into the Groups. 
  * -1 if the Turn could not be added to the vector of Groups.
  */
-int Board::addTurnToGroups(const Turn& t, vector<Group>& groups)
+int Board::applyTurnToGroups(const Turn& t, vector<Group>& groups)
 {
 	int ret = 0;
 	
@@ -98,128 +230,6 @@ int Board::addTurnToGroups(const Turn& t, vector<Group>& groups)
 	}
 	
 	return ret;
-}
-
-/**
- * @brief Apply the given Turn to the Board and recalculates the groups and so on
- * @param t The turn to be performed
- * @return true on success
- */
-bool Board::applyTurn(Turn t)
-{
-	// Check if turn is valid
-	if(!isValid(t)) ///@todo We need an implementation for that...
-	{
-		return false;
-	}
-	
-	// Add Turn to Turn history
-	m_turnHistory.push_back(t);
-	
-	// Check if Turn::target Coordinate is neighbour of an existing Group and 
-	// add it to those. Else create a new Group
-	vector<Group*> neighbourGroups;
-	for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
-	{
-		// The Group and the Coordinate have to have the same color
-		if(t.getColor() != it->getColor())
-		{
-			// If the color is not equal we should check the next Group
-			continue;
-		}
-		
-		if(isNeighbour(t.getTarget(), *it))
-		{
-			// Temporary save of a pointer to the group which the coordinate is a neigbour of
-			neighbourGroups.push_back(&*it);
-		}
-	}
-	// If the Coordinate is a neighbour of one Group add it to it.
-	if(neighbourGroups.size() > 0)
-	{
-		(*neighbourGroups.begin())->addMember(t.getTarget());
-		
-		// If there are more than one Group which has neighbourhood to the Coordinate
-		// we can merge those Groups
-		if(neighbourGroups.size() > 1)
-		{
-			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
-			{
-				(*neighbourGroups.begin())->merge(**it);
-			}
-			
-			// Removing every Group which has been merged from the m_groups vector
-			// Note: begin() + 1
-			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
-			{
-				vector<Group>::iterator toRemove = std::find(m_groups.begin(), m_groups.end(), **it);
-				
-				m_groups.erase(toRemove);
-			}
-			
-		}
-	}
-	else // else we should create a new Group
-	{
-		Group newGroup(t.getTarget());
-		newGroup.setColor(t.getColor());
-		m_groups.push_back(newGroup);
-	}
-	
-	// ###
-	// Removing catched Groups/Stones
-	// ###
-	
-	// Check if any enemy Group was catched by the last Turn
-	vector<Group> catchedGroups = getCatchedGroups(getColor(), m_groups);
-	
-	m_numberOfRemovedStonesLastTurn = 0;
-	m_removedStonesLastTurn.clear();
-	// If any Group were catched we have to remove it from the board
-	if(!catchedGroups.empty())
-	{
-		// We need to add some points to the player and remove the catched Group(s)
-		for(vector<Group>::iterator it = catchedGroups.begin(); it != catchedGroups.end(); ++it)
-		{
-			// Adding Points
-			addPoints(getColor(), it->getNumberOfMembers());
-			// We need to check here if it is an atari and have to block it for
-			// the next Turn...
-			
-			// it will be blocked by isValid(Turn) by checking the last element
-			// of Turnhistory and removedStonesLastTurn == 1 and 
-			// the Coordinate in m_removedStonesLastTurn
-			m_numberOfRemovedStonesLastTurn += it->getNumberOfMembers();
-			vector<Coordinate> removingStones = it->getMembers();
-			m_removedStonesLastTurn.insert(m_removedStonesLastTurn.end(), removingStones.begin(), removingStones.end());
-			
-			// Removing that Group from Board
-			vector<Group>::iterator toRemove = std::find(m_groups.begin(), m_groups.end(), *it);
-			m_groups.erase(toRemove);
-		}
-	}
-	
-	// Change color
-	changeColor();
-	
-	// Done.
-	return true;
-}
-
-/**
- * @brief Creates a Turn from the given params and calls the real applyTurn function
- * @param color The color of the player
- * @param target The Coordinate of the target
- * @return true on success
- * @note This is an alternative signature for the other applyTurn function
- */
-bool Board::applyTurn(bool color, Coordinate target)
-{
-	//create Turn
-	Turn t(color, target);
-	
-	//call the function above
-	return applyTurn(t);
 }
 
 /**
