@@ -33,7 +33,7 @@ public:
 	std::vector<Group> getCatchedGroups(const bool color, const std::vector<Group>& groups);
 	
 	bool getColor();
-	std::vector<Coordinate> getCoordinates(const std::vector<Group> groups);
+	std::vector<Coordinate> getCoordinates(const std::vector<Group>& groups);
 	
 	std::vector<Group> getGroups();
 	std::vector<Group> getGroups(bool color);
@@ -46,6 +46,8 @@ public:
 	float getPoints(bool color);
 	
 	std::vector<Turn> getTurnHistory();
+	
+	std::vector<Coordinate> removeGroups(const std::vector<Group>& groupsToRemove, std::vector<Group>& groups);
 	
 	void setColor(bool color);
 	void setMaxX(int maxX);

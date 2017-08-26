@@ -66,25 +66,15 @@ bool Board::applyTurn(Turn t)
 	// If any Group were catched we have to remove it from the board
 	if(!catchedGroups.empty())
 	{
-		// We need to add some points to the player and remove the catched Group(s)
-		for(vector<Group>::iterator it = catchedGroups.begin(); it != catchedGroups.end(); ++it)
-		{
-			// Adding Points
-			addPoints(getColor(), it->getNumberOfMembers());
-			// We need to check here if it is an atari and have to block it for
-			// the next Turn...
-			
-			// it will be blocked by isValid(Turn) by checking the last element
-			// of Turnhistory and removedStonesLastTurn == 1 and 
-			// the Coordinate in m_removedStonesLastTurn
-			m_numberOfRemovedStonesLastTurn += it->getNumberOfMembers();
-			vector<Coordinate> removingStones = it->getMembers();
-			m_removedStonesLastTurn.insert(m_removedStonesLastTurn.end(), removingStones.begin(), removingStones.end());
-			
-			// Removing that Group from Board
-			vector<Group>::iterator toRemove = std::find(m_groups.begin(), m_groups.end(), *it);
-			m_groups.erase(toRemove);
-		}
+		// Save the removed Stones to check if an Atari is given for the next Turn
+		// Furthermore remove the catchedGroups of the vector of Groups.
+		m_removedStonesLastTurn = removeGroups(catchedGroups, m_groups);
+		
+		// Add points to the score of the current player
+		addPoints(getColor(), m_removedStonesLastTurn.size());
+		
+		// Save the number of Stone were removed this Turn
+		m_numberOfRemovedStonesLastTurn = m_removedStonesLastTurn.size();
 	}
 	
 	// Change color
@@ -204,7 +194,7 @@ bool Board::getColor()
  * @param groups Vector of all Groups which provide the Coordinates
  * @return vector<Coordinate> of all members of all Groups
  */
-std::vector<Coordinate> Board::getCoordinates(const std::vector<Group> groups)
+std::vector<Coordinate> Board::getCoordinates(const std::vector<Group>& groups)
 {
 	vector<Coordinate> allCoordinates;
 	
@@ -354,6 +344,34 @@ vector<Turn> Board::getTurnHistory()
 bool Board::isInitialized()
 {
 	return m_initialized;
+}
+
+/**
+ * @brief This function will remove the given Groups from the given vector of Groups
+ * @param groupsToRemove vector of Groups which will be removed
+ * @param groups Th vector of Groups from which the given Groups should be removed
+ * @return vector<Coordinate> of all Coordinates which were removed
+ */
+vector<Coordinate> Board::removeGroups(const std::vector<Group>& groupsToRemove, std::vector<Group>& groups)
+{
+	vector<Coordinate> removedStones;
+	if(!groupsToRemove.empty())
+	{
+		// We need to add some points to the player and remove the catched Group(s)
+		for(vector<Group>::const_iterator it = groupsToRemove.begin(); it != groupsToRemove.end(); ++it)
+		{
+			// Removing that Group from Group Vector
+			vector<Group>::iterator toRemove = std::find(groups.begin(), groups.end(), *it);
+			if(toRemove != groups.end())
+			{
+				vector<Coordinate> memberCoordinates = it->getMembers();
+				removedStones.insert(removedStones.end(), memberCoordinates.begin(), memberCoordinates.end());
+				groups.erase(toRemove);
+			}
+		}
+	}
+	
+	return removedStones;
 }
 
 /**
