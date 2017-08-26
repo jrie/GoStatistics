@@ -29,6 +29,78 @@ bool Board::addTurnHistory(vector<Turn> turnHistory)
 }
 
 /**
+ * @brief This function adds the, by Turn spezified, Coordinate to the Group which has 
+ * a neighbour at the given Coordinate. If multiple Groups has neighbours at that Coordinate 
+ * these Groups will be merged into one Group. If no Group of the same color has a neighbour there, 
+ * a new Group will be created with the given Coordinate.
+ * @param t The Turn which describes the color and Coordinate
+ * @param groups vector<Groups> all Groups which will be checked and modified
+ * @return 0 if a new Group were created. 1 if the Turn could be merged into the Groups. 
+ * -1 if the Turn could not be added to the vector of Groups.
+ */
+int Board::addTurnToGroups(const Turn& t, vector<Group>& groups)
+{
+	int ret = 0;
+	
+	// Check if Turn::target Coordinate is neighbour of an existing Group and 
+	// add it to those. Else create a new Group
+	vector<Group*> neighbourGroups;
+	for(vector<Group>::iterator it = groups.begin(); it != groups.end(); ++it)
+	{
+		// The Group and the Coordinate have to have the same color
+		if(t.getColor() != it->getColor())
+		{
+			// If the color is not equal we should check the next Group
+			continue;
+		}
+		
+		if(isNeighbour(t.getTarget(), *it))
+		{
+			// Temporary save of a pointer to the group which the coordinate is a neigbour of
+			neighbourGroups.push_back(&*it);
+		}
+	}
+	// If the Coordinate is a neighbour of one Group add it to it.
+	if(neighbourGroups.size() > 0)
+	{
+		if(not (*neighbourGroups.begin())->addMember(t.getTarget()))
+		{
+			ret = -1;
+		}
+		else
+		{
+			ret = 1;
+			// If there are more than one Group which has neighbourhood to the Coordinate
+			// we can merge those Groups
+			if(neighbourGroups.size() > 1)
+			{
+				for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
+				{
+					(*neighbourGroups.begin())->merge(**it);
+				}
+
+				// Removing every Group which has been merged from the m_groups vector
+				// Note: begin() + 1
+				for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
+				{
+					vector<Group>::iterator toRemove = std::find(groups.begin(), groups.end(), **it);
+
+					groups.erase(toRemove);
+				}
+			}
+		}
+	}
+	else // else we should create a new Group
+	{
+		Group newGroup(t.getTarget());
+		newGroup.setColor(t.getColor());
+		groups.push_back(newGroup);
+	}
+	
+	return ret;
+}
+
+/**
  * @brief Apply the given Turn to the Board and recalculates the groups and so on
  * @param t The turn to be performed
  * @return true on success

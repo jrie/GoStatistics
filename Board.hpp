@@ -21,6 +21,8 @@ public:
 	
 	bool addTurnHistory(std::vector<Turn> turnHistory);
 	
+	int addTurnToGroups(const Turn& t, std::vector<Group>& groups);
+	
 	void addPoints(bool color, float points);
 	
 	bool applyTurn(Turn t);
