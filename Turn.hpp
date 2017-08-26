@@ -21,12 +21,12 @@ private:
 	Coordinate m_target;
 };
 
-inline bool operator==(const Turn& lhs, const Turn& rhs);
-inline bool operator!=(const Turn& lhs, const Turn& rhs);
-inline bool operator<(const Turn& lhs, const Turn& rhs);
-inline bool operator>(const Turn& lhs, const Turn& rhs);
-inline bool operator<=(const Turn& lhs, const Turn& rhs);
-inline bool operator>=(const Turn& lhs, const Turn& rhs);
+bool operator==(const Turn& lhs, const Turn& rhs);
+bool operator!=(const Turn& lhs, const Turn& rhs);
+bool operator<(const Turn& lhs, const Turn& rhs);
+bool operator>(const Turn& lhs, const Turn& rhs);
+bool operator<=(const Turn& lhs, const Turn& rhs);
+bool operator>=(const Turn& lhs, const Turn& rhs);
 
 #endif /* TURN_HPP */
 

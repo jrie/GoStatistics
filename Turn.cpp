@@ -63,32 +63,32 @@ Coordinate Turn::getTarget() const
 	return m_target;
 }
 
-inline bool operator==(const Turn& lhs, const Turn& rhs)
+bool operator==(const Turn& lhs, const Turn& rhs)
 {
 	return lhs.getColor() == rhs.getColor() && lhs.getTarget() == rhs.getTarget();
 }
 
-inline bool operator!=(const Turn& lhs, const Turn& rhs)
+bool operator!=(const Turn& lhs, const Turn& rhs)
 {
 	return not (lhs == rhs);
 }
 
-inline bool operator<(const Turn& lhs, const Turn& rhs)
+bool operator<(const Turn& lhs, const Turn& rhs)
 {
 	return lhs.getId() < rhs.getId();
 }
 
-inline bool operator>(const Turn& lhs, const Turn& rhs)
+bool operator>(const Turn& lhs, const Turn& rhs)
 {
 	return rhs < lhs;
 }
 
-inline bool operator<=(const Turn& lhs, const Turn& rhs)
+bool operator<=(const Turn& lhs, const Turn& rhs)
 {
 	return not (lhs > rhs);
 }
 
-inline bool operator>=(const Turn& lhs, const Turn& rhs)
+bool operator>=(const Turn& lhs, const Turn& rhs)
 {
 	return not (lhs < rhs);
 }
