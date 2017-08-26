@@ -117,19 +117,19 @@ int Board::applyTurnToGroups(const Turn& t, vector<Group>& groups)
 	// Check if Turn::target Coordinate is neighbour of an existing Group and 
 	// add it to those. Else create a new Group
 	vector<Group*> neighbourGroups;
-	for(vector<Group>::iterator it = groups.begin(); it != groups.end(); ++it)
+	for(auto& group : groups)
 	{
 		// The Group and the Coordinate have to have the same color
-		if(t.getColor() != it->getColor())
+		if(t.getColor() != group.getColor())
 		{
 			// If the color is not equal we should check the next Group
 			continue;
 		}
 		
-		if(isNeighbour(t.getTarget(), *it))
+		if(isNeighbour(t.getTarget(), group))
 		{
 			// Temporary save of a pointer to the group which the coordinate is a neigbour of
-			neighbourGroups.push_back(&*it);
+			neighbourGroups.push_back(&group);
 		}
 	}
 	// If the Coordinate is a neighbour of one Group add it to it.
@@ -508,9 +508,9 @@ vector<Coordinate> Board::getNeighbours(const Group& g)
 vector<Coordinate> Board::getAllStones()
 {
 	vector<Coordinate> stones;
-	for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
+	for(const auto& group : m_groups)
 	{
-		vector<Coordinate> stonesFromGroup = it->getMembers();
+		vector<Coordinate> stonesFromGroup = group.getMembers();
 		stones.insert(stones.end(), stonesFromGroup.begin(), stonesFromGroup.end());
 	}
 	
@@ -549,9 +549,9 @@ bool Board::isValid(const Coordinate& coor)
 bool Board::isValid(const Group& g)
 {
 	vector<Coordinate> g_members = g.getMembers();
-	for(vector<Coordinate>::iterator it = g_members.begin(); it != g_members.end(); ++it)
+	for(const auto& g_member : g_members)
 	{
-		if(!isValid(*it))
+		if(!isValid(g_member))
 		{
 			return false;
 		}
@@ -559,13 +559,13 @@ bool Board::isValid(const Group& g)
 	
 	// Checking if all members of the Group are neighbours of each other
 	// So that all members are connected to each other
-	for(vector<Coordinate>::iterator it = g_members.begin(); it != g_members.end(); ++it)
+	for(const auto& g_member : g_members)
 	{
-		vector<Coordinate> neighbours = getNeighbours(*it);
+		vector<Coordinate> neighbours = getNeighbours(g_member);
 		
-		for(vector<Coordinate>::iterator it2 = neighbours.begin(); it2 != neighbours.end(); ++it2)
+		for(const auto& neighbour : neighbours)
 		{
-			if(g.hasMemberAt(*it2))
+			if(g.hasMemberAt(neighbour))
 			{
 				continue;
 			}
@@ -683,9 +683,9 @@ bool Board::isNeighbour(const Coordinate& coorToCheck, const Coordinate& coor)
 {
 	vector<Coordinate> neighbours = getNeighbours(coor);
 	
-	for(vector<Coordinate>::iterator it = neighbours.begin(); it != neighbours.end(); ++it)
+	for(const auto& neighbour : neighbours)
 	{
-		if(*it == coorToCheck)
+		if(neighbour == coorToCheck)
 		{
 			return true;
 		}
@@ -702,9 +702,9 @@ bool Board::isNeighbour(const Coordinate& coorToCheck, const Coordinate& coor)
 bool Board::isNeighbour(const Coordinate& coorToCheck, const Group& g)
 {
 	vector<Coordinate> neighbours = getNeighbours(g);
-	for(vector<Coordinate>::iterator it = neighbours.begin(); it != neighbours.end(); ++it)
+	for(const auto& neighbour : neighbours)
 	{
-		if(*it == coorToCheck)
+		if(neighbour == coorToCheck)
 		{
 			return true;
 		}
@@ -740,13 +740,13 @@ void Board::showField(int type)
 			vector<Coordinate> whiteStones = getCoordinates(whiteGroups);
 			vector<Coordinate> blackStones = getCoordinates(blackGroups);
 			
-			for(vector<Coordinate>::iterator it = whiteStones.begin(); it != whiteStones.end(); ++it)
+			for(const auto& whiteStone : whiteStones)
 			{
-				field[*it] = true;
+				field[whiteStone] = true;
 			}
-			for(vector<Coordinate>::iterator it = blackStones.begin(); it != blackStones.end(); ++it)
+			for(const auto& blackStone : blackStones)
 			{
-				field[*it] = false;
+				field[blackStone] = false;
 			}
 
 //			cout << "DEBUG - Field has " << field.size() << " members!" << endl;
