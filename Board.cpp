@@ -275,19 +275,7 @@ vector<Group> Board::getGroups()
  */
 vector<Group> Board::getGroups(bool color)
 {
-	vector<Group> retGroups;
-	// Iterate over the m_groups vector to compare the color of the Group with 
-	// the requested one
-	for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
-	{
-		if(it->getColor() == color)
-		{
-			// Adding the Group to the end of the return vector
-			retGroups.push_back(*it);
-		}
-	}
-	
-	return retGroups;
+	return getGroups(color, m_groups);
 }
 
 /**
@@ -497,6 +485,7 @@ vector<Coordinate> Board::getNeighbours(const Group& g)
 /**
  * @brief Returns all stones which are placed on the board
  * @return vector<Coordinate> all stones on the board
+ * @deprecated Were replaced by getCoordinates(vector<Group>)
  */
 vector<Coordinate> Board::getAllStones()
 {
@@ -517,7 +506,7 @@ vector<Coordinate> Board::getAllStones()
  */
 bool Board::isFree(const Coordinate& coor)
 {
-	vector<Coordinate> allStones = getAllStones();
+	vector<Coordinate> allStones = getCoordinates(m_groups);
 	
 	return std::find(allStones.begin(), allStones.end(), coor) == allStones.end();
 }
@@ -660,7 +649,7 @@ bool Board::isValid(const Turn& t)
 	// ###
 	// Check if we do not place a stone at a field where an atari was one turn before
 	// ###
-	// If exactly one stone was removed last Turn we have to check if we want to place it again
+	// If exactly one stone was removed last Turn we have to check if we want to place it again (Atari)
 	if(m_numberOfRemovedStonesLastTurn == 1)
 	{
 		if(std::find(m_removedStonesLastTurn.begin(), m_removedStonesLastTurn.end(), t.getTarget()) != m_removedStonesLastTurn.end())
