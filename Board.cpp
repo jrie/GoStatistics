@@ -640,16 +640,7 @@ bool Board::isValid(const Turn& t)
 	vector<Group> catchedGroups = getCatchedGroups(getColor(), tmp_Groups);
 	
 	// If any Group were catched we have to remove it from the board
-	if(!catchedGroups.empty())
-	{
-		// We need to add some points to the player and remove the catched Group(s)
-		for(vector<Group>::iterator it = catchedGroups.begin(); it != catchedGroups.end(); ++it)
-		{
-			// Removing that Group from Board
-			vector<Group>::iterator toRemove = std::find(tmp_Groups.begin(), tmp_Groups.end(), *it);
-			tmp_Groups.erase(toRemove);
-		}
-	}
+	removeGroups(catchedGroups, tmp_Groups);
 	
 	// Check if any own Group was catched by the Turn
 	catchedGroups = getCatchedGroups(!getColor(), tmp_Groups);
