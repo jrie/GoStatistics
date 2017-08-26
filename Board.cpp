@@ -54,56 +54,6 @@ bool Board::applyTurn(Turn t)
 		return false;
 	}
 	
-//	// Check if Turn::target Coordinate is neighbour of an existing Group and 
-//	// add it to those. Else create a new Group
-//	vector<Group*> neighbourGroups;
-//	for(vector<Group>::iterator it = m_groups.begin(); it != m_groups.end(); ++it)
-//	{
-//		// The Group and the Coordinate have to have the same color
-//		if(t.getColor() != it->getColor())
-//		{
-//			// If the color is not equal we should check the next Group
-//			continue;
-//		}
-//		
-//		if(isNeighbour(t.getTarget(), *it))
-//		{
-//			// Temporary save of a pointer to the group which the coordinate is a neigbour of
-//			neighbourGroups.push_back(&*it);
-//		}
-//	}
-//	// If the Coordinate is a neighbour of one Group add it to it.
-//	if(neighbourGroups.size() > 0)
-//	{
-//		(*neighbourGroups.begin())->addMember(t.getTarget());
-//		
-//		// If there are more than one Group which has neighbourhood to the Coordinate
-//		// we can merge those Groups
-//		if(neighbourGroups.size() > 1)
-//		{
-//			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
-//			{
-//				(*neighbourGroups.begin())->merge(**it);
-//			}
-//			
-//			// Removing every Group which has been merged from the m_groups vector
-//			// Note: begin() + 1
-//			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
-//			{
-//				vector<Group>::iterator toRemove = std::find(m_groups.begin(), m_groups.end(), **it);
-//				
-//				m_groups.erase(toRemove);
-//			}
-//			
-//		}
-//	}
-//	else // else we should create a new Group
-//	{
-//		Group newGroup(t.getTarget());
-//		newGroup.setColor(t.getColor());
-//		m_groups.push_back(newGroup);
-//	}
-	
 	// ###
 	// Removing catched Groups/Stones
 	// ###
@@ -663,60 +613,19 @@ bool Board::isValid(const Turn& t)
 	// Check if we do not kill a friendly group
 	// ###
 	
-	// Check if Turn::target Coordinate is neighbour of an existing Group and 
-	// add it to those. Else create a new Group
-	
 	// Deep copy the group List to not modify the real one!
 	// The cast forces a deep copy of the vector
 	vector<Group> tmp_Groups = (const vector<Group>) m_groups;
 	
-	vector<Group*> neighbourGroups;
-	for(vector<Group>::iterator it = tmp_Groups.begin(); it != tmp_Groups.end(); ++it)
+	// Adding Turn::target Coordinate to the groups
+	// Add the new stone to the Groups
+	if(applyTurnToGroups(t, tmp_Groups) == -1)
 	{
-		// The Group and the Coordinate have to have the same color
-		if(t.getColor() != it->getColor())
-		{
-			// If the color is not equal we should check the next Group
-			continue;
-		}
-		
-		if(isNeighbour(t.getTarget(), *it))
-		{
-			// Temporary save of a pointer to the group which the coordinate is a neigbour of
-			neighbourGroups.push_back(&*it);
-		}
+		// Could not add the stone to any Group because a Group has allready a member at the 
+		// given Coordinate.
+		// isFree() failed!
+		return false;
 	}
-	// If the Coordinate is a neighbour of one Group add it to it.
-	if(neighbourGroups.size() > 0)
-	{
-		(*neighbourGroups.begin())->addMember(t.getTarget());
-		
-		// If there are more than one Group which has neighbourhood to the Coordinate
-		// we can merge those Groups
-		if(neighbourGroups.size() > 1)
-		{
-			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
-			{
-				(*neighbourGroups.begin())->merge(**it);
-			}
-			
-			// Removing every Group which has been merged from the m_groups vector
-			// Note: begin() + 1
-			for(vector<Group*>::iterator it = neighbourGroups.begin() + 1; it != neighbourGroups.end(); ++it)
-			{
-				vector<Group>::iterator toRemove = std::find(tmp_Groups.begin(), tmp_Groups.end(), **it);
-				
-				tmp_Groups.erase(toRemove);
-			}
-		}
-	}
-	else // else we should create a new Group
-	{
-		Group newGroup(t.getTarget());
-		newGroup.setColor(t.getColor());
-		tmp_Groups.push_back(newGroup);
-	}
-	
 	
 	// First we have to check if we catch any other group...
 	
