@@ -98,42 +98,8 @@ bool Board::applyTurn(Turn t)
 	// Removing catched Groups/Stones
 	// ###
 	
-	// Extract the Groups by color
-	vector<Group> enemyGroups = getGroups(!getColor());
-	vector<Group> friendGroups = getGroups(getColor());
-	
-	// Generate a vector of all own stones
-	vector<Coordinate> friendStones;
-	
-	for(vector<Group>::iterator it = friendGroups.begin(); it != friendGroups.end(); ++it)
-	{
-		vector<Coordinate> friendStoneFromGroup = it->getMembers();
-		friendStones.insert(friendStones.end(), friendStoneFromGroup.begin(), friendStoneFromGroup.end());
-	}
-	
 	// Check if any enemy Group was catched by the last Turn
-	vector<Group> catchedGroups;
-	for(vector<Group>::iterator it = enemyGroups.begin(); it != enemyGroups.end(); ++it)
-	{
-		vector<Coordinate> groupNeighbours = getNeighbours(*it);
-		bool hasFreedoms = false;
-		for(vector<Coordinate>::iterator it2 = groupNeighbours.begin(); it2 != groupNeighbours.end(); ++it2)
-		{
-			if(std::find(friendStones.begin(), friendStones.end(), *it2) != friendStones.end())
-			{
-				continue;
-			}
-			else
-			{
-				hasFreedoms = true;
-				break;
-			}
-		}
-		if(!hasFreedoms)
-		{
-			catchedGroups.push_back(*it);
-		}
-	}
+	vector<Group> catchedGroups = getCatchedGroups(getColor(), m_groups);
 	
 	m_numberOfRemovedStonesLastTurn = 0;
 	m_removedStonesLastTurn.clear();
