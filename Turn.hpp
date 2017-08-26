@@ -16,12 +16,17 @@ public:
 	
 	static int instances;
 private:
-	
-	
 	bool m_color = false;
 	int m_id = -1;
 	Coordinate m_target;
 };
+
+inline bool operator==(const Turn& lhs, const Turn& rhs);
+inline bool operator!=(const Turn& lhs, const Turn& rhs);
+inline bool operator<(const Turn& lhs, const Turn& rhs);
+inline bool operator>(const Turn& lhs, const Turn& rhs);
+inline bool operator<=(const Turn& lhs, const Turn& rhs);
+inline bool operator>=(const Turn& lhs, const Turn& rhs);
 
 #endif /* TURN_HPP */
 
