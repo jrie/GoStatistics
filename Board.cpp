@@ -202,6 +202,54 @@ bool Board::getColor()
 }
 
 /**
+ * @brief Returns the catched Groups which are surounded by stones of "color"
+ * @param color The color of the friendly Groups
+ * @param groups vector<Group> of all Groups which should be considered
+ * @return vector<Group> of all catched Groups
+ */
+vector<Group> Board::getCatchedGroups(const bool color, const vector<Group>& groups)
+{
+	// Extract the Groups by color
+	vector<Group> enemyGroups = getGroups(!color, groups);
+	vector<Group> friendGroups = getGroups(color, groups);
+	
+	// Generate a vector of all own stones
+	vector<Coordinate> friendStones;
+	
+	for(vector<Group>::iterator it = friendGroups.begin(); it != friendGroups.end(); ++it)
+	{
+		vector<Coordinate> friendStoneFromGroup = it->getMembers();
+		friendStones.insert(friendStones.end(), friendStoneFromGroup.begin(), friendStoneFromGroup.end());
+	}
+	
+	// Check if any enemy Group was catched by the last Turn
+	vector<Group> catchedGroups;
+	for(vector<Group>::const_iterator it = enemyGroups.begin(); it != enemyGroups.end(); ++it)
+	{
+		vector<Coordinate> groupNeighbours = getNeighbours(*it);
+		bool hasFreedoms = false;
+		for(vector<Coordinate>::const_iterator it2 = groupNeighbours.begin(); it2 != groupNeighbours.end(); ++it2)
+		{
+			if(std::find(friendStones.begin(), friendStones.end(), *it2) != friendStones.end())
+			{
+				continue;
+			}
+			else
+			{
+				hasFreedoms = true;
+				break;
+			}
+		}
+		if(!hasFreedoms)
+		{
+			catchedGroups.push_back(*it);
+		}
+	}
+	
+	return catchedGroups;
+}
+
+/**
  * @brief Returns all groups at the board
  * @return vector<Group> groups at the board
  */

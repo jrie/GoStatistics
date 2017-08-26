@@ -28,6 +28,8 @@ public:
 	
 	void changeColor();
 	
+	std::vector<Group> getCatchedGroups(const bool color, const std::vector<Group>& groups);
+	
 	bool getColor();
 	std::vector<Group> getGroups();
 	std::vector<Group> getGroups(bool color);
