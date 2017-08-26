@@ -66,7 +66,7 @@ bool Turn::isInitialized() const
 /**
  * @brief Returns if the represented turn is valid or not
  * @return true if the turn is valid
- * @todo We need to implement a validation check!
+ * @deprecated This function is replaced by Board::isValid(Turn)
  */
 bool Turn::isValid() const
 {
