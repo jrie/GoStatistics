@@ -202,6 +202,24 @@ bool Board::getColor()
 }
 
 /**
+ * @brief Returns all Coordinates which are in the vector of Groups
+ * @param groups Vector of all Groups which provide the Coordinates
+ * @return vector<Coordinate> of all members of all Groups
+ */
+std::vector<Coordinate> Board::getCoordinates(const std::vector<Group> groups)
+{
+	vector<Coordinate> allCoordinates;
+	
+	for(vector<Group>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+	{
+		vector<Coordinate> coordinatesOfGroup = it->getMembers();
+		allCoordinates.insert(allCoordinates.end(), coordinatesOfGroup.begin(), coordinatesOfGroup.end());
+	}
+	
+	return allCoordinates;
+}
+
+/**
  * @brief Returns the catched Groups which are surounded by stones of "color"
  * @param color The color of the friendly Groups
  * @param groups vector<Group> of all Groups which should be considered
@@ -214,13 +232,7 @@ vector<Group> Board::getCatchedGroups(const bool color, const vector<Group>& gro
 	vector<Group> friendGroups = getGroups(color, groups);
 	
 	// Generate a vector of all own stones
-	vector<Coordinate> friendStones;
-	
-	for(vector<Group>::iterator it = friendGroups.begin(); it != friendGroups.end(); ++it)
-	{
-		vector<Coordinate> friendStoneFromGroup = it->getMembers();
-		friendStones.insert(friendStones.end(), friendStoneFromGroup.begin(), friendStoneFromGroup.end());
-	}
+	vector<Coordinate> friendStones = getCoordinates(friendGroups);
 	
 	// Check if any enemy Group was catched by the last Turn
 	vector<Group> catchedGroups;
