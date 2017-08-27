@@ -553,8 +553,18 @@ vector<Coordinate> Board::getAllStones()
  */
 bool Board::isFree(const Coordinate& coor)
 {
-	vector<Coordinate> allStones = getCoordinates(m_groups);
-	
+	return isFree(coor, m_groups);
+}
+
+/**
+ * @brief Returns whether a Coordinate on the board is free or a stone is already placed on it
+ * @param coor The Coordinate to be checked
+ * @param groups vector<Group> of Groups which should be considered
+ * @return trie if no ther stone is placed on the Coordinate
+ */
+bool Board::isFree(const Coordinate& coor, const vector<Group>& groups)
+{
+	vector<Coordinate> allStones = getCoordinates(groups);
 	return std::find(allStones.begin(), allStones.end(), coor) == allStones.end();
 }
 

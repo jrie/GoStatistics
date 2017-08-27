@@ -60,6 +60,7 @@ public:
 	
 	std::vector<Coordinate> getAllStones();
 	bool isFree(const Coordinate& coor);
+	bool isFree(const Coordinate& coor, const std::vector<Group>& groups);
 	bool isValid(const Coordinate& coor);
 	bool isValid(const Group& g);
 	bool isValid(const Turn& t);
