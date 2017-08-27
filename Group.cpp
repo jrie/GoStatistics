@@ -33,8 +33,8 @@ bool Group::addMember(Coordinate newMember)
 }
 
 /**
- * @brief Return the color of the group
- * @return color of the group
+ * @brief Return the player color of the group
+ * @return player color of the group
  */
 bool Group::getColor() const
 {
@@ -78,9 +78,9 @@ bool Group::hasMemberAt(const Coordinate& coor) const
 unsigned int Group::merge(const Group& g)
 {
 	unsigned int i = 0;
-	for(std::vector<Coordinate>::const_iterator it = g.m_coordinates.begin(); it != g.m_coordinates.end(); ++it)
+	for(const auto& coor : g.m_coordinates)
 	{
-		if(addMember(*it))
+		if(addMember(coor))
 		{
 			i++;
 		}
@@ -90,8 +90,8 @@ unsigned int Group::merge(const Group& g)
 }
 
 /**
- * @brief Sets the color of the group
- * @param color The color of the group
+ * @brief Sets the player color of the group
+ * @param color The player color of the group
  */
 void Group::setColor(bool color)
 {

@@ -14,6 +14,7 @@ public:
 	void setColor(bool color);
 	void setTarget(Coordinate target);
 	
+	// keeps track of how many instances were created
 	static int instances;
 private:
 	bool m_color = false;

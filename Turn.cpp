@@ -2,6 +2,7 @@
 
 /**
  * This variable is static so that every instance can access this value
+ * It will keep track of how many instances were created to set unique ids
  */
 int Turn::instances = 0;
 
@@ -18,8 +19,8 @@ Turn::Turn(bool color, Coordinate target) : m_color(color), m_target(target), m_
 }
 
 /**
- * @brief Sets the color. false for black and true for white
- * @param color
+ * @brief Sets the player color. false for black and true for white
+ * @param color The player color
  */
 void Turn::setColor(bool color)
 {
@@ -27,7 +28,7 @@ void Turn::setColor(bool color)
 }
 
 /**
- * @brief Sets the target Coordinate
+ * @brief Sets the target Coordinate. This describes the field were the stone will be placed
  * @param target The Coordinate
  */
 void Turn::setTarget(Coordinate target)
@@ -36,8 +37,8 @@ void Turn::setTarget(Coordinate target)
 }
 
 /**
- * @brief Returns the color of the Stone which will be played
- * @return The color
+ * @brief Returns the player color of the stone which will be played
+ * @return The player color
  */
 bool Turn::getColor() const
 {
@@ -55,8 +56,7 @@ int Turn::getId() const
 
 /**
  * @brief Returns the target Coordinate
- * @return The target Coordinate
- * @throws Exception if the object is not fully initialized
+ * @return The field (Coordinate) were the stone should be placed
  */
 Coordinate Turn::getTarget() const
 {

@@ -9,6 +9,9 @@ using namespace std;
 
 #include <algorithm> //find
 
+/**
+ * @brief Initializes the player points according to game rules
+ */
 void Board::initPoints()
 {
 	m_points.insert({false, 0.5}); // Komi
@@ -45,6 +48,9 @@ bool Board::applyTurn(Turn t)
 	m_turnHistory.push_back(t);
 	
 	// Add the new stone to the Groups
+	// This will add the stone to a allready existing group or create a new one
+	// If the stone could be a member of more than one group these groups will 
+	// be merged.
 	if(applyTurnToGroups(t, m_groups) == -1)
 	{
 		// Could not add the stone to any Group because a Group has allready a member at the 
@@ -61,12 +67,14 @@ bool Board::applyTurn(Turn t)
 	// Check if any enemy Group was catched by the last Turn
 	vector<Group> catchedGroups = getCatchedGroups(getColor(), m_groups);
 	
+	// Resetting previous saved values
 	m_numberOfRemovedStonesLastTurn = 0;
 	m_removedStonesLastTurn.clear();
 	// If any Group were catched we have to remove it from the board
 	if(!catchedGroups.empty())
 	{
 		// Save the removed Stones to check if an Atari is given for the next Turn
+		// We have to make sure we can check for the Kö rule
 		// Furthermore remove the catchedGroups of the vector of Groups.
 		m_removedStonesLastTurn = removeGroups(catchedGroups, m_groups);
 		
@@ -74,10 +82,11 @@ bool Board::applyTurn(Turn t)
 		addPoints(getColor(), m_removedStonesLastTurn.size());
 		
 		// Save the number of Stone were removed this Turn
+		// To easily check accordingly to the Kö rule
 		m_numberOfRemovedStonesLastTurn = m_removedStonesLastTurn.size();
 	}
 	
-	// Change color
+	// Change player color
 	changeColor();
 	
 	// Done.
@@ -135,12 +144,18 @@ int Board::applyTurnToGroups(const Turn& t, vector<Group>& groups)
 	// If the Coordinate is a neighbour of one Group add it to it.
 	if(neighbourGroups.size() > 0)
 	{
+		// This will add a new member to the first neighbourgroup
+		// If it fails we set the return value to -1 to indicate that the Turn
+		// could not be applied to the Groups
 		if(not (*neighbourGroups.begin())->addMember(t.getTarget()))
 		{
 			ret = -1;
 		}
 		else
 		{
+			// We have added the Target Coordinate to the first neighbour Group.
+			// Now we have to merge every other neighbour group to the first one
+			
 			ret = 1;
 			// If there are more than one Group which has neighbourhood to the Coordinate
 			// we can merge those Groups
@@ -173,7 +188,7 @@ int Board::applyTurnToGroups(const Turn& t, vector<Group>& groups)
 }
 
 /**
- * @brief Changes the current color to the opposite one
+ * @brief Changes the current player color to the opposite one
  */
 void Board::changeColor()
 {
@@ -181,8 +196,8 @@ void Board::changeColor()
 }
 
 /**
- * @brief Returns the current color
- * @return current color
+ * @brief Returns the current player color
+ * @return current player color
  */
 bool Board::getColor()
 {
@@ -208,8 +223,8 @@ std::vector<Coordinate> Board::getCoordinates(const std::vector<Group>& groups)
 }
 
 /**
- * @brief Returns the catched Groups which are surounded by stones of "color"
- * @param color The color of the friendly Groups
+ * @brief Returns the catched Groups which are surounded by stones of the given player color
+ * @param color The player color of the friendly Groups
  * @param groups vector<Group> of all Groups which should be considered
  * @return vector<Group> of all catched Groups
  */
@@ -219,23 +234,30 @@ vector<Group> Board::getCatchedGroups(const bool color, const vector<Group>& gro
 	vector<Group> enemyGroups = getGroups(!color, groups);
 	vector<Group> friendGroups = getGroups(color, groups);
 	
-	// Generate a vector of all own stones
+	// Generate a vector of all friendly stones
 	vector<Coordinate> friendStones = getCoordinates(friendGroups);
 	
-	// Check if any enemy Group was catched by the last Turn
+	// Check if any enemy Group is catched
 	vector<Group> catchedGroups;
 	for(const auto& enemyGroup : enemyGroups)
 	{
+		// Extract the neighbour fields of each enemy group
 		vector<Coordinate> groupNeighbours = getNeighbours(enemyGroup);
 		bool hasFreedoms = false;
+		
+		// Check if any neighbour field of the group is not occupied by a friendly stone.
+		// If there is a free field the group is not catched.
 		for(const auto& neighbour : groupNeighbours)
 		{
+			///@todo Check if we want to check again friendly stones of if we want to 
+			// use something like "isFree()" instead
 			if(std::find(friendStones.begin(), friendStones.end(), neighbour) != friendStones.end())
 			{
 				continue;
 			}
 			else
 			{
+				// The group is not catched!
 				hasFreedoms = true;
 				break;
 			}
@@ -259,9 +281,9 @@ vector<Group> Board::getGroups()
 }
 
 /**
- * @brief Returns the groups which belong to the given color
- * @param color The color of the groups which are requested
- * @return vector<Group> groups of the given color
+ * @brief Returns the groups which belong to the given player color
+ * @param color The player color of the groups which are requested
+ * @return vector<Group> groups of the given player color
  */
 vector<Group> Board::getGroups(bool color)
 {
@@ -269,11 +291,11 @@ vector<Group> Board::getGroups(bool color)
 }
 
 /**
- * @brief Returns the groups which belong to the given color and are members of
+ * @brief Returns the groups which belong to the given player color and are members of
  * the given groupList
- * @param color The color of the groups which are requested
+ * @param color The player color of the groups which are requested
  * @param groupList The vector of Groups which shall be considered
- * @return vector<Group> groups of the given color
+ * @return vector<Group> groups of the given player color
  */
 vector<Group> Board::getGroups(bool color, const vector<Group>& groupList)
 {
@@ -294,6 +316,7 @@ vector<Group> Board::getGroups(bool color, const vector<Group>& groupList)
 
 /**
  * @brief Returns the maximum x value
+ * @note This is the maximum x value of the playground
  * @return maximum x value
  */
 int Board::getMaxX()
@@ -303,6 +326,7 @@ int Board::getMaxX()
 
 /**
  * @brief Returns the maximum y value
+ * @note This is the maximum y value of the playground
  * @return maximum y value
  */
 int Board::getMaxY()
@@ -312,6 +336,7 @@ int Board::getMaxY()
 
 /**
  * @brief Returns the minimum x value
+ * @note This is the minimum x value of the playground
  * @return minimum x value
  */
 int Board::getMinX()
@@ -321,6 +346,7 @@ int Board::getMinX()
 
 /**
  * @brief Returns the minimum y value
+ * @note This is the minimum y value of the playground
  * @return minimum y value
  */
 int Board::getMinY()
@@ -355,16 +381,19 @@ bool Board::isInitialized()
 vector<Coordinate> Board::removeGroups(const std::vector<Group>& groupsToRemove, std::vector<Group>& groups)
 {
 	vector<Coordinate> removedStones;
+	// If there are no groups to remove we have nothing to do
 	if(!groupsToRemove.empty())
 	{
-		// We need to add some points to the player and remove the catched Group(s)
-		for(const auto& group : groups)
+		// We have to remove each group individually
+		for(const auto& catchedGroup : groupsToRemove)
 		{
-			// Removing that Group from Group Vector
-			vector<Group>::iterator toRemove = std::find(groups.begin(), groups.end(), group);
+			// Removing the current catched Group from Group Vector
+			vector<Group>::iterator toRemove = std::find(groups.begin(), groups.end(), catchedGroup);
+			// Does we have found the Group in groups?
 			if(toRemove != groups.end())
 			{
-				vector<Coordinate> memberCoordinates = group.getMembers();
+				// We found the Group in groups so we can remove it
+				vector<Coordinate> memberCoordinates = catchedGroup.getMembers();
 				removedStones.insert(removedStones.end(), memberCoordinates.begin(), memberCoordinates.end());
 				groups.erase(toRemove);
 			}
@@ -375,8 +404,8 @@ vector<Coordinate> Board::removeGroups(const std::vector<Group>& groupsToRemove,
 }
 
 /**
- * @brief Sets the current color of the board
- * @param color The new color
+ * @brief Sets the current player color of the board
+ * @param color The new player color
  */
 void Board::setColor(bool color)
 {
@@ -577,15 +606,21 @@ bool Board::isValid(const Group& g)
 }
 
 /**
- * @brief
- * @param t
- * @return 
- * @todo We need an implementation here...
+ * @brief Checks if a Turn is valid or not
+ * @details A Turn is valid if ...
+ * - The player color of the Turn is the same as the one from the Board
+ * - The Coordinate of target is valid
+ * - The Target field is not occupied by any other stone
+ * - The Turn will not kill any of our own groups
+ * - The Turn can be applied to the Groups
+ * - The Kö rule is not 
+ * @param t The Turn which will be validated
+ * @return true if the Turn is valid
  */
 bool Board::isValid(const Turn& t)
 {
 	// ###
-	// Check if the Turn color is the same as the current Board color
+	// Check if the Turn player color is the same as the current Board  player color
 	// ###
 	if(t.getColor() != getColor())
 	{
@@ -631,6 +666,7 @@ bool Board::isValid(const Turn& t)
 		// Could not add the stone to any Group because a Group has allready a member at the 
 		// given Coordinate.
 		// isFree() failed!
+		cout << "DEBUG - Invalid Turn: " << "Turn could not be applied to the Groups" << endl;
 		return false;
 	}
 	
@@ -712,16 +748,31 @@ bool Board::isNeighbour(const Coordinate& coorToCheck, const Group& g)
 	return false;
 }
 
+/**
+ * @brief Adds the number of points to the given player
+ * @param color Color which identifies the player
+ * @param points The points which will be added to the players score. It can be a 
+ * fraction to apply any kind of handicap
+ */
 void Board::addPoints(bool color, float points)
 {
 	m_points[color] += points;
 }
 
+/**
+ * @brief Returns the current score of the given player
+ * @param color Color which identifies the player
+ * @return The score
+ */
 float Board::getPoints(bool color)
 {
 	return m_points[color];
 }
 
+/**
+ * @brief Displayes the current state of the Board at the console
+ * @param type
+ */
 void Board::showField(int type)
 {
 	switch(type)
