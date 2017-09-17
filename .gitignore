@@ -3,3 +3,8 @@
 *.autosave
 dist/*
 build/*
+CMakeFiles/*
+nbproject/*
+dll/*
+Makefile
+.dep.inc
