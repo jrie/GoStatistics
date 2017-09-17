@@ -1,10 +1,9 @@
 *.user
 *.orig
 *.autosave
-dist/*
-build/*
-CMakeFiles/*
-nbproject/*
-dll/*
+src/CMakeFiles/*
+*.cmake
+src/Makefile
+src/CMakeCache.txt
 Makefile
-.dep.inc
+nbproject/*
