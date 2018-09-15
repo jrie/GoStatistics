@@ -1,0 +1,9 @@
+*.user
+*.orig
+*.autosave
+src/CMakeFiles/*
+*.cmake
+src/Makefile
+src/CMakeCache.txt
+Makefile
+nbproject/*
